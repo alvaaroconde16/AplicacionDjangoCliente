@@ -24,13 +24,8 @@ urlpatterns = [
     path('', include('viajes.urls')),
     path("__debug__/", include("debug_toolbar.urls")),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('api/v1/', include("viajes.api_urls")),
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-handler404 = 'viajes.views.error_404_view'
-handler403 = 'viajes.views.error_403_view'
-handler400 = 'viajes.views.error_400_view'
-handler500 = 'viajes.views.error_500_view'
