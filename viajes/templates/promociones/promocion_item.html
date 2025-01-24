@@ -1,0 +1,35 @@
+<div>
+    <h2>Nombre: {{ promocion.nombre|upper }}</h2>
+    <p>Descripción: {{ promocion.descripcion }}</p>
+    <p>Descuento: {{ promocion.descuento_porcentaje }}</p>
+
+    <p>Fecha de inicio: {{ promocion.fecha_inicio|date:"d-m-Y" }}</p>
+    <p>Fecha de final: {{ promocion.fecha_fin|date:"d-m-Y" }}</p>
+    <p>Activa: {{ promocion.activo }}</p>
+    <p>ID del promoción: {{ promocion.id }}</p>
+    <h4>promoción #{{ forloop.counter }}</h4>
+
+
+    <!-- Enlace estilizado como botón para actualizar la promocion -->
+    {% if perms.viajes.actualizar_promocion %}
+    <a href="{% url 'actualizar_promocion' promocion.id %}" class="btn btn-outline-success mt-2 mb-5">Actualizar promocion</a>
+    {% endif %}
+
+
+    <!-- Formulario para eliminar la reserva con confirmación -->
+    {% if perms.viajes.eliminar_promocion %}
+    <form method="post" action="{% url 'eliminar_promocion' promocion.id %}" class="d-inline">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-danger mt-2 mb-5" 
+            onclick="return confirm('¿Estás seguro de que deseas eliminar esta promocion? Esta acción no se puede deshacer.');">
+            Eliminar promoción
+        </button>
+    </form>
+    {% endif %}
+
+    {% comment %}
+        Este bloque de código es solo para mostrar los detalles de la reserva
+        y no se mostrará en el HTML renderizado.
+    {% endcomment %}
+    
+</div>

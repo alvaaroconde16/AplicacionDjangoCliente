@@ -1,0 +1,27 @@
+{% extends 'principal.html' %}
+
+{% load static %}
+
+{% block cabecera %}
+<h1>RESERVAS</h1>
+<img src="{% static 'images/logo.png' %}" alt="Logo"/>
+{% endblock %}
+
+{% block contenido %}
+
+    <p>Numero de reservas: {{ reservas_mostrar|length }} reserva{{ reservas_mostrar|pluralize }}</p>
+    
+    {% if reservas_mostrar|length|divisibleby:2 %}
+        <p>El número de reservas es par.</p>
+    {% else %}
+        <p>El número de reservas es impar.</p>
+    {% endif %}
+
+    
+    {% for reserva in reservas_mostrar %}
+        {% include 'reservas/reservas_item.html' %}
+    {% empty %}
+        <p>No hay reservas</p>
+    {% endfor %}
+
+{% endblock %}

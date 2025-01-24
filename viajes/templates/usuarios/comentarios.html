@@ -1,0 +1,19 @@
+{% extends 'principal.html' %}
+
+{% load static %}
+
+{% block cabecera %}
+<h1>COMENTARIOS</h1>
+<img src="{% static 'images/logo.png' %}" alt="Logo"/>
+{% endblock %}
+
+{% block contenido %}
+
+    <p>Total de comentarios: {{ comentarios_mostrar|length }}</p>
+    {% for comentario in comentarios_mostrar %}
+        {% include 'usuarios/comentarios_item.html' %}
+    {% empty %}
+        <p>No hay comentarios.</p>
+    {% endfor %}
+    
+{% endblock %}

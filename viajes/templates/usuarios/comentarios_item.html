@@ -1,0 +1,33 @@
+<div>
+    <h2>Título: {{ comentario.titulo|capfirst }}</h2>
+    <p>Contenido: {{ comentario.contenido|default:"No hay contenido disponible."|truncatechars:50 }}</p>
+    <p>Fecha del comentario: {{ comentario.fecha_comentario|date:"d-m-Y" }}</p>
+    <p>Calificación: {{ comentario.calificacion }}</p>
+
+    {% if comentario.calificacion != 5 %}
+        <p>Este comentario no tiene la calificación máxima.</p>
+    {% else %}
+        <p>Este comentario tiene la calificación máxima.</p>        
+    {% endif %}
+
+    <p>Usuario: {{ comentario.usuario.nombre }}</p>
+
+
+    <!-- Enlace estilizado como botón para actualizar la reserva -->
+    {% if perms.viajes.actualizar_comentario %}
+    <a href="{% url 'actualizar_comentario' comentario.id %}" class="btn btn-outline-success mt-2 mb-5">Actualizar Comentario</a>
+    {% endif %}
+
+
+    <!-- Formulario para eliminar la reserva con confirmación -->
+    {% if perms.viajes.eliminar_comentario %}
+    <form method="post" action="{% url 'eliminar_comentario' comentario.id %}" class="d-inline">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-danger mt-2 mb-5" 
+            onclick="return confirm('¿Estás seguro de que deseas eliminar este comentario? Esta acción no se puede deshacer.');">
+            Eliminar Comentario
+        </button>
+    </form>
+    {% endif %}
+
+</div>

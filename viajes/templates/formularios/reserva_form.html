@@ -1,0 +1,50 @@
+{% extends 'principal.html' %}
+{% load static %}
+{% load django_bootstrap5 %}
+
+{% block cabecera %}
+<h1>Crear Reserva</h1>
+<img src="{% static 'images/logo.png' %}" alt="Logo"/>
+{% endblock %}
+
+{% block contenido %}
+<div class="container mt-5">
+    <h2>Crear Nueva Reserva</h2>
+    <form action="{% url 'reserva_create' %}" method="post">
+        {% csrf_token %}
+
+        <!-- Campo: Código de Reserva -->
+        <div class="mb-4">
+            {% bootstrap_field form.codigo_reserva show_label=True %}
+        </div>
+
+        <!-- Campo: Fecha de Salida -->
+        <div class="mb-4">
+            {% bootstrap_field form.fecha_salida show_label=True %}
+        </div>
+
+        <!-- Campo: Fecha de Llegada -->
+        <div class="mb-4">
+            {% bootstrap_field form.fecha_llegada show_label=True %}
+        </div>
+
+        <!-- Campo: Número de Personas -->
+        <div class="mb-4">
+            {% bootstrap_field form.numero_personas show_label=True %}
+        </div>
+
+        <!-- Campo: Precio -->
+        <div class="mb-4">
+            {% bootstrap_field form.precio show_label=True %}
+        </div>
+
+        <!-- Campo: Usuario -->
+        <div class="mb-4">
+            {% bootstrap_field form.usuario show_label=True %}
+        </div>
+
+        <!-- Botón de creación -->
+        <button type="submit" class="btn btn-primary">Crear Reserva</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'principal.html' %}
+
+{% load static %}
+
+{% block cabecera %}
+<h1>DESTINOS</h1>
+<img src="{% static 'images/logo.png' %}" alt="Logo"/>
+{% endblock %}
+
+{% block contenido %}
+
+    <p>Numero de destinos: {{ destinos_mostrar|length }} destino{{ destinos_mostrar|pluralize }}</p>
+    {% for destino in destinos_mostrar %}
+        {% include 'destinos/destinos_item.html' %}
+    {% empty %}
+        <p>No hay destinos disponibles.</p>
+    {% endfor %}
+
+{% endblock %}

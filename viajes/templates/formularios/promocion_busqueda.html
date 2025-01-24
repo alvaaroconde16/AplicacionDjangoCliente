@@ -1,0 +1,34 @@
+{% extends 'principal.html' %}
+{% load static %}
+{% load django_bootstrap5 %}
+
+{% block cabecera %}
+<h1>Búsqueda de Promociones</h1>
+<img src="{% static 'images/logo.png' %}" alt="Logo"/>
+{% endblock %}
+
+{% block contenido %}
+<div class="container mt-5">
+    <h2>Buscar Promociones</h2>
+    <form action="{% url 'promocion_busqueda' %}" method="get">
+        {% csrf_token %}
+        
+        <!-- Campo: Nombre -->
+        <div class="mb-4">
+            {% bootstrap_field formulario.nombre show_label=True %}
+        </div>
+        
+        <!-- Campo: Descripción -->
+        <div class="mb-4">
+            {% bootstrap_field formulario.descripcion show_label=True %}
+        </div>
+        
+        <!-- Campo: Descuento -->
+        <div class="mb-4">
+            {% bootstrap_field formulario.descuento_porcentaje show_label=True %}
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Buscar</button>
+    </form>
+</div>
+{% endblock %}

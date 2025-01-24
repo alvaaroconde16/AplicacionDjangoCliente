@@ -1,0 +1,18 @@
+<html>
+    <head></head>
+    <body>
+    <h1>AGENCIA DE VIAJES</h1>
+
+    <h2>Listado de enlaces</h2>
+    <ul>
+        <li><a href="{% url 'listar_usuarios' %}">Usuarios</a></li>
+        <li><a href="{% url 'listar_reservas' 10 %}">Todas las reservas del usuario 10</a></li>
+        <li><a href="{% url 'reservas_rango' '2000-01-01' '2024-12-31' %}">Reservas entre el 01/01/2000 y el 12/31/2024</a></li>
+        <li><a href="{% url 'reservas_sin_extras' %}">Reservas que no tienen extras asociados</a></li>
+        <li><a href="{% url 'listar_destinos' %}">Destinos</a></li>
+        <li><a href="{% url 'alojamientos_destino' 6 %}">Total de los alojamientos del destino 6</a></li>
+        <li><a href="{% url 'pasaporte_nacionalidad' 'Española' %}">Mostramos los usuarios con nacionalidad Española en el pasaporte</a></li>
+        <li><a href="{% url 'ultimo_usuario_comentar' %}">Último usuario en realizar un comentario</a></li>
+        <li><a href="{% url 'comentarios_usuario' 8 %}">Comentarios del usuario 8</a></li>
+        <li><a href="{% url 'total_precios_reservas' %}">Total de los precios de las reservas</a></li>
+    </ul>

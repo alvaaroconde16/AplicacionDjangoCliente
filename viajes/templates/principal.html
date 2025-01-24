@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de Tareas</title>
+
+     <!-- Cargar el archivo CSS -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <!-- Cargar el archivo JavaScript -->
+    <script src="{% static 'js/script.js' %}" defer></script>
+
+    {% load django_bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+
+</head>
+<body>
+
+    <!-- Menú de navegación -->
+    {% include 'estructura/menu.html' %}
+
+    <!-- Cabecera -->
+    <header>
+        {% block cabecera %}
+        <h1>Bienvenido al Gestor de Tareas</h1>
+        <img src="{% static 'images/logo.png' %}" alt="Logo"/>
+        {% endblock %}
+    </header>
+
+    <!-- Contenido principal -->
+    <main>
+        {% block contenido %}
+            <p>Bienvenido a la página de gestión de tareas. Aquí podrás ver, gestionar y realizar un seguimiento de todas las tareas asignadas y completadas. Navega a través de los diferentes apartados para acceder a las tareas, usuarios y comentarios.</p>
+            <p>En esta sección podrás encontrar información detallada sobre las tareas, incluyendo su estado, fecha de vencimiento, prioridad y los usuarios asignados. Utiliza las opciones del menú para acceder a las páginas correspondientes y realizar las acciones que necesites.</p>
+        {% endblock %}
+    </main>
+
+    <footer>
+        <!-- Pie de página -->
+        {% include 'estructura/footer.html' %}
+    </footer>
+
+</body>
+</html>

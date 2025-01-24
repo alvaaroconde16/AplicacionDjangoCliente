@@ -1,0 +1,41 @@
+<!-- destino_form.html -->
+
+{% extends 'principal.html' %}
+{% load static %}
+{% load django_bootstrap5 %}
+
+{% block cabecera %}
+<h1>CREAR DESTINO</h1>
+<img src="{% static 'images/logo.png' %}" alt="Logo"/>
+{% endblock %}
+
+{% block contenido %}
+<div class="container mt-5">
+    <h2>Crear Destino</h2>
+    <form action = "{% url 'destino_create' %}" method="post">
+        {% csrf_token %}
+
+        <!-- Campo: Nombre -->
+        <div class="mb-4">
+            {% bootstrap_field form.nombre show_label=True %}
+        </div>
+        
+        <!-- Campo: País -->
+        <div class="mb-4">
+            {% bootstrap_field form.pais show_label=True %}
+        </div>
+        
+        <!-- Campo: Descripción -->
+        <div class="mb-4">
+            {% bootstrap_field form.descripcion show_label=True %}
+        </div>
+        
+        <!-- Campo: Popularidad -->
+        <div class="mb-4">
+            {% bootstrap_field form.popularidad show_label=True %}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Crear Destino</button>
+    </form>
+</div>
+{% endblock %}

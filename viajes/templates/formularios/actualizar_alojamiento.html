@@ -1,0 +1,51 @@
+<!-- destino_form.html -->
+
+{% extends 'principal.html' %}
+{% load static %}
+{% load django_bootstrap5 %}
+
+{% block cabecera %}
+<h1>ACTUALIZAR ALOJAMIENTO</h1>
+<img src="{% static 'images/logo.png' %}" alt="Logo"/>
+{% endblock %}
+
+{% block contenido %}
+<div class="container mt-5">
+    <h2>Actualizar Alojamiento</h2>
+    <form action = "{% url 'actualizar_alojamiento' alojamiento.id %}" method="post">
+        {% csrf_token %}
+
+        <!-- Campo: Nombre -->
+        <div class="mb-4">
+            {% bootstrap_field form.nombre show_label=True %}
+        </div>
+        
+        <!-- Campo: Dirección -->
+        <div class="mb-4">
+            {% bootstrap_field form.direccion show_label=True %}
+        </div>
+        
+        <!-- Campo: Capacidad -->
+        <div class="mb-4">
+            {% bootstrap_field form.capacidad show_label=True %}
+        </div>
+        
+        <!-- Campo: Tipo -->
+        <div class="mb-4">
+            {% bootstrap_field form.tipo show_label=True %}
+        </div>
+
+        <!-- Campo: Destino -->        
+        <div class="mb-4">
+            {% bootstrap_field form.destino show_label=True %}
+        </div>
+
+        <!-- Campo: Reserva -->        
+        <div class="mb-4">
+            {% bootstrap_field form.reserva show_label=True %}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Actualizar Alojamiento</button>
+    </form>
+</div>
+{% endblock %}
