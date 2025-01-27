@@ -16,3 +16,15 @@ def reservas_lista_api(request):
     response = requests.get('http://127.0.0.1:8000/api/v1/reservas')
     reservas = response.json()
     return render(request, 'reservas/reserva_api.html', {'reservas_mostrar':reservas})
+
+
+def usuarios_lista_api(request):
+    response = requests.get('http://127.0.0.1:8000/api/v1/usuarios')
+    usuarios = response.json()
+    return render(request, 'usuarios/usuario_api.html', {'usuarios_mostrar':usuarios})
+
+
+def reservasMejoradas_lista_api(request):
+    response = requests.get('http://127.0.0.1:8000/api/v1/reservasMejoradas')
+    reservas = response.json()
+    return render(request, 'reservas/reservaMejorada_api.html', {'reservas_mostrar':reservas})

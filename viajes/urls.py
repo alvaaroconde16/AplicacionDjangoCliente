@@ -6,6 +6,8 @@ from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('usuarios/reservas', views.reservas_lista_api, name='reservas_lista_api'),
+    path('reservas', views.reservas_lista_api, name='reservas_lista_api'),
+    path('usuarios', views.usuarios_lista_api, name='usuarios_lista_api'),
+    path('reservasMejoradas', views.reservasMejoradas_lista_api, name='reservasMejoradas_lista_api'),
 ]
 

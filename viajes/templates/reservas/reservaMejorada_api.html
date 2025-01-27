@@ -1,0 +1,29 @@
+{% extends "principal.html" %}
+{% block contenido %}
+
+  <h1 class="display-3">Lista de Reservas Mejoradas</h1>
+
+  <div class="row">
+    {% for reserva in reservas_mostrar %}
+      <div class="col-sm-4 mb-2">
+        <div class="card">
+          <div class="card-body">
+            <h2>Código de Reserva: {{ reserva.codigo_reserva }}</h2>
+            <p>Fecha de Salida: {{ reserva.fecha_salida }}</p>
+            <p>Fecha de Llegada: {{ reserva.fecha_llegada }}</p>
+            <p>Número de Personas: {{ reserva.numero_personas }}</p>
+            <p><strong>Reserva #{{ reserva.id }}</strong></p>
+            <p>Precio: €{{ reserva.precio }}</p>
+
+            <h5 class="mt-4">Usuario Asignado:</h5>
+            <p>Nombre: {{ reserva.usuario.nombre }}</p>
+            <p>Correo: {{ reserva.usuario.correo }}</p>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <p>No hay reservas disponibles.</p>
+    {% endfor %}
+  </div>
+
+{% endblock %}
