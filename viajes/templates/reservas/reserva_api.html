@@ -8,11 +8,11 @@
         <div class="col-sm-4 mb-2">
             <div class="card">
                 <div class="card-body">
-                    <h2>Código de reserva: {{ reserva.codigo_reserva }}</h2>
-                    <p>Fecha de salida: {{ reserva.fecha_salida|date:"d-m-Y" }}</p>
-                    <p>Fecha de llegada: {{ reserva.fecha_llegada|date:"d-m-Y" }}</p>
-                    <p>Número de personas: {{ reserva.numero_personas }}</p>
-                    <h4>Reserva #{{ forloop.counter }}</h4>
+                    <h2>Código de Reserva: {{ reserva.codigo_reserva }}</h2>
+                    <p>Fecha de Salida: {{ reserva.fecha_salida }}</p>
+                    <p>Fecha de Llegada: {{ reserva.fecha_llegada }}</p>
+                    <p>Número de Personas: {{ reserva.numero_personas }}</p>
+                    <p><strong>Reserva #{{ forloop.counter }}</strong></p>
                     <p>Precio: {{ reserva.precio|floatformat:2 }}</p>
                 </div>
             </div>

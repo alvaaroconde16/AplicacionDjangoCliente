@@ -1,0 +1,28 @@
+{% extends "principal.html" %}
+{% block contenido %}
+
+  <h1 class="display-3">Lista de Transportes Mejorados</h1>
+
+  <div class="row">
+    {% for transporte in transportes_mostrar %}
+      <div class="col-sm-4 mb-2">
+        <div class="card">
+          <div class="card-body">
+            <h2>{{ transporte.tipo }} (Capacidad: {{ transporte.capacidad }})</h2>
+            <p>Disponible: {% if transporte.disponible %}Sí{% else %}No{% endif %}</p>
+            <p>Costo por persona: {{ transporte.costo_por_persona }}€</p>
+            <p>Destinos:</p>
+            <ul>
+              {% for dest in transporte.destino.all %}
+                <li>{{ dest.nombre }} - {{ dest.pais }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <p>No hay transportes disponibles.</p>
+    {% endfor %}
+  </div>
+
+{% endblock %}

@@ -5,7 +5,6 @@ logs
 staticfiles
 
 # Env
-.env
 myvenv/
 venv/
 .venv

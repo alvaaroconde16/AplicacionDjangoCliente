@@ -9,5 +9,7 @@ urlpatterns = [
     path('reservas', views.reservas_lista_api, name='reservas_lista_api'),
     path('usuarios', views.usuarios_lista_api, name='usuarios_lista_api'),
     path('reservasMejoradas', views.reservasMejoradas_lista_api, name='reservasMejoradas_lista_api'),
+    path('alojamientosMejorados', views.alojamientosMejorados_lista_api, name='alojamientosMejorados_lista_api'),
+    path('transportesMejorados', views.transportesMejorados_lista_api, name='transportesMejorados_lista_api'),
 ]
 
