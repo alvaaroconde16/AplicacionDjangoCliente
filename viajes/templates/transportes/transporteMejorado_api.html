@@ -11,12 +11,12 @@
             <h2>{{ transporte.tipo }} (Capacidad: {{ transporte.capacidad }})</h2>
             <p>Disponible: {% if transporte.disponible %}Sí{% else %}No{% endif %}</p>
             <p>Costo por persona: {{ transporte.costo_por_persona }}€</p>
-            <p>Destinos:</p>
-            <ul>
-              {% for dest in transporte.destino.all %}
-                <li>{{ dest.nombre }} - {{ dest.pais }}</li>
+            <h5 class="mb-3">Destinos:</h5>
+            <div>
+              {% for dest in transporte.destino %}
+                <p><strong>{{ dest.nombre }}</strong> - {{ dest.pais }}</p>
               {% endfor %}
-            </ul>
+            </div>
           </div>
         </div>
       </div>

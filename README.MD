@@ -753,3 +753,5 @@ Para reiniciar la contraseña, el sistema envía un enlace de recuperación por 
 
 ```python
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
