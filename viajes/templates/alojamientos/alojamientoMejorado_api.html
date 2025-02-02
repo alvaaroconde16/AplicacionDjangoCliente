@@ -1,0 +1,26 @@
+{% extends "principal.html" %}
+{% block contenido %}
+
+  <h1 class="display-3">Lista de Reservas Mejoradas</h1>
+
+  <div class="row">
+    {% for alojamiento in alojamientos_mostrar %}
+      <div class="col-sm-4 mb-2">
+        <div class="card">
+          <div class="card-body">
+            <h2>{{ alojamiento.nombre }}</h2>
+            <p>Dirección: {{ alojamiento.direccion }}</p>
+            <p>Capacidad: {{ alojamiento.capacidad }}</p>
+            <p>Tipo: {{ alojamiento.tipo }}</p>
+
+            <h5 class="mt-4">Destino:</h5>
+            <p>Destino: {{ alojamiento.destino.nombre }}</p>
+            <p>País: {{ alojamiento.destino.pais }}</p>
+            <p>Popularidad: {{ alojamiento.destino.popularidad }}</p>
+          </div>
+        </div>
+      </div>
+        
+    {% endfor %}
+  </div>
+{% endblock %}

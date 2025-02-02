@@ -31,6 +31,8 @@ DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = ['127.0.0.1', '.pythonanywhere.com','0.0.0.0']
 
+OAUTH2_ACCESS_TOKEN = env("OAUTH2_ACCESS_TOKEN")
+
 
 # Application definition
 
