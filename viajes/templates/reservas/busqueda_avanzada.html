@@ -1,0 +1,65 @@
+{% extends 'principal.html' %}
+
+{% block contenido %}
+{% load django_bootstrap5 %}
+
+<h1>Búsqueda Avanzada de Reservas</h1>
+
+<form method="GET" action="{% url 'reserva_busqueda_avanzada' %}">
+    {% csrf_token %}
+    
+    <!-- Campo de búsqueda por código de reserva -->
+    <div class="mb-4">
+        {% bootstrap_field formulario.codigo_reserva show_label=True %}
+    </div>
+
+    <!-- Campo de búsqueda por número de personas -->
+    <div class="mb-4">
+        {% bootstrap_field formulario.numero_personas show_label=True %}
+    </div>
+
+    <!-- Campo de búsqueda por fecha desde -->
+    <div class="mb-4">
+        {% bootstrap_field formulario.fecha_desde show_label=True %}
+    </div>
+
+    <!-- Campo de búsqueda por fecha hasta -->
+    <div class="mb-4">
+        {% bootstrap_field formulario.fecha_hasta show_label=True %}
+    </div>
+
+    <!-- Campo de búsqueda por precio desde -->
+    <div class="mb-4">
+        {% bootstrap_field formulario.precio_desde show_label=True %}
+    </div>
+
+    <!-- Campo de búsqueda por precio hasta -->
+    <div class="mb-4">
+        {% bootstrap_field formulario.precio_hasta show_label=True %}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Buscar Reserva</button>
+</form>
+
+{% if reservas_mostrar %}
+    <h2 class="mt-4">Resultados de la Búsqueda</h2>
+    <div class="row">
+        {% for reserva in reservas_mostrar %}
+            <div class="col-sm-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Código de Reserva: {{ reserva.codigo_reserva }}</h4>
+                        <p class="card-text">Fecha de Salida: {{ reserva.fecha_salida }}</p>
+                        <p class="card-text">Fecha de Llegada: {{ reserva.fecha_llegada }}</p>
+                        <p class="card-text">Número de Personas: {{ reserva.numero_personas }}</p>
+                        <p class="card-text">Precio: {{ reserva.precio|floatformat:2 }}</p>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p>No se encontraron reservas.</p>
+        {% endfor %}
+    </div>
+{% endif %}
+
+{% endblock %}
