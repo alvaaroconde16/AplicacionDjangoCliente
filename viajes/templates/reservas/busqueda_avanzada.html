@@ -12,38 +12,19 @@
         {% bootstrap_field formulario.codigo_reserva show_label=True %}
     </div>
 
-    <!-- Campo de búsqueda por nombre de usuario -->
-    <div class="mb-4">
-        {% bootstrap_field formulario.nombre_usuario show_label=True %}
-    </div>
-
     <!-- Campo de búsqueda por número de personas -->
     <div class="mb-4">
         {% bootstrap_field formulario.numero_personas show_label=True %}
     </div>
-
-    <!-- Campo de búsqueda por fecha desde -->
+    
+    <!-- Campo de búsqueda por fecha -->
     <div class="mb-4">
-        {% bootstrap_field formulario.fecha_desde show_label=True %}
-    </div>
-
-    <!-- Campo de búsqueda por fecha hasta -->
-    <div class="mb-4">
-        {% bootstrap_field formulario.fecha_hasta show_label=True %}
-    </div>
-
-    <!-- Campo de búsqueda por precio desde -->
-    <div class="mb-4">
-        {% bootstrap_field formulario.precio_desde show_label=True %}
-    </div>
-
-    <!-- Campo de búsqueda por precio hasta -->
-    <div class="mb-4">
-        {% bootstrap_field formulario.precio_hasta show_label=True %}
+        {% bootstrap_field formulario.fecha show_label=True %}
     </div>
 
     <button type="submit" class="btn btn-primary">Buscar Reserva</button>
 </form>
+
 
 {% if reservas_mostrar %}
     <h2 class="mt-4">Resultados de la Búsqueda</h2>
