@@ -92,41 +92,45 @@ def reserva_busqueda_simple(request):
     
     
 def reserva_busqueda_avanzada(request):
-    if len(request.GET) > 0: 
+    if len(request.GET) > 0:
         formulario = BusquedaAvanzadaReservaForm(request.GET)
         
-        try:
-            headers = crear_cabecera() 
-            response = requests.get(
-                'http://127.0.0.1:8000/api/v1/reservas/busqueda_avanzada',  
-                headers=headers,
-                params=formulario.data  
-            )
-            
-            if response.status_code == requests.codes.ok:  # Si la respuesta es correcta (200)
-                reservas = response.json()  # Parseamos la respuesta como JSON
-                return render(request, 'reservas/lista_reservas_mejorada.html', {"reservas_mostrar": reservas})
-            else:
-                print(response.status_code)
-                response.raise_for_status()  # Si no es 200, genera una excepción
+        if formulario.is_valid():
+            try:
+                # Crear cabeceras necesarias para la petición (puedes adaptarlas según sea necesario)
+                headers = crear_cabecera()
                 
-        except HTTPError as http_err:
-            print(f'Hubo un error en la petición: {http_err}')
-            
-            if response.status_code == 400:  # Si el error es Bad Request
-                errores = response.json()  # Obtenemos los errores desde la respuesta de la API
-                for error in errores:
-                    formulario.add_error(error, errores[error])  # Añadimos los errores al formulario
-                return render(request, 'reservas/busqueda_avanzada.html', {"formulario": formulario, "errores": errores})  
-            
-            else:
-                return mi_error_500(request)  # Para otros tipos de errores, manejamos el error 500
-        except Exception as err:
-            print(f'Ocurrió un error: {err}')
-            return mi_error_500(request)  # En caso de excepciones generales, manejamos un error 500
+                # Realizar la solicitud GET a la API
+                response = requests.get(
+                    'http://0.0.0.0:8000/api/v1/reservas/busqueda_avanzada',  # URL de la API de búsqueda avanzada de reservas
+                    headers=headers,
+                    params=formulario.cleaned_data  # Pasar los datos del formulario validados
+                )
+                
+                if response.status_code == requests.codes.ok:
+                    reservas = response.json()  # Obtener las reservas de la respuesta JSON
+                    return render(request, 'reservas/busqueda_avanzada.html', {"formulario": formulario,"reservas_mostrar": reservas})
+                else:
+                    print(response.status_code)
+                    response.raise_for_status()
+            except HTTPError as http_err:
+                print(f'Hubo un error en la petición: {http_err}')
+                if response.status_code == 400:
+                    errores = response.json()
+                    for error in errores:
+                        formulario.add_error(error, errores[error])  # Agregar los errores del formulario
+                    return render(request, 'reservas/busqueda_avanzada.html', {"formulario": formulario, "errores": errores})
+                else:
+                    return mi_error_500(request)  # Retornar una página de error 500
+            except Exception as err:
+                print(f'Ocurrió un error: {err}')
+                return mi_error_500(request)
+        else:
+            # Si el formulario no es válido, redirige con los errores
+            return render(request, 'reservas/busqueda_avanzada.html', {"formulario": formulario})
     else:
-        formulario = BusquedaAvanzadaReservaForm(None) 
-    
+        formulario = BusquedaAvanzadaReservaForm(None)
+        
     return render(request, 'reservas/busqueda_avanzada.html', {"formulario": formulario})  
 
 

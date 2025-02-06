@@ -2,7 +2,6 @@
 
 {% block contenido %}
 {% load django_bootstrap5 %}
-
 <h1>Búsqueda Avanzada de Reservas</h1>
 
 <form method="GET" action="{% url 'reserva_busqueda_avanzada' %}">
@@ -11,6 +10,11 @@
     <!-- Campo de búsqueda por código de reserva -->
     <div class="mb-4">
         {% bootstrap_field formulario.codigo_reserva show_label=True %}
+    </div>
+
+    <!-- Campo de búsqueda por nombre de usuario -->
+    <div class="mb-4">
+        {% bootstrap_field formulario.nombre_usuario show_label=True %}
     </div>
 
     <!-- Campo de búsqueda por número de personas -->
@@ -45,21 +49,25 @@
     <h2 class="mt-4">Resultados de la Búsqueda</h2>
     <div class="row">
         {% for reserva in reservas_mostrar %}
-            <div class="col-sm-4 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title">Código de Reserva: {{ reserva.codigo_reserva }}</h4>
-                        <p class="card-text">Fecha de Salida: {{ reserva.fecha_salida }}</p>
-                        <p class="card-text">Fecha de Llegada: {{ reserva.fecha_llegada }}</p>
-                        <p class="card-text">Número de Personas: {{ reserva.numero_personas }}</p>
-                        <p class="card-text">Precio: {{ reserva.precio|floatformat:2 }}</p>
-                    </div>
+        <div class="col-sm-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title mb-3">Código de Reserva: {{ reserva.codigo_reserva }}</h4>
+                    <p class="card-text"><strong>Cliente:</strong> {{ reserva.usuario.nombre }}</p>
+                    <p class="card-text"><strong>Fecha de Salida:</strong> {{ reserva.fecha_salida }}</p>
+                    <p class="card-text"><strong>Fecha de Llegada:</strong> {{ reserva.fecha_llegada }}</p>
+                    <p class="card-text"><strong>Número de Personas:</strong> {{ reserva.numero_personas }}</p>
+                    <p class="card-text"><strong>Precio:</strong> ${{ reserva.precio|floatformat:2 }}</p>
                 </div>
             </div>
-        {% empty %}
-            <p>No se encontraron reservas.</p>
-        {% endfor %}
+        </div>
+    {% empty %}
+        <div class="col-12">
+            <div class="alert alert-warning" role="alert">
+                No se encontraron reservas que coincidan con la búsqueda.
+            </div>
+        </div>
+    {% endfor %}
     </div>
 {% endif %}
-
 {% endblock %}
