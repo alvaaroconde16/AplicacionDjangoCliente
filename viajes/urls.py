@@ -17,5 +17,6 @@ urlpatterns = [
     path('buscar-usuario-avanzada/', views.usuario_busqueda_avanzada, name='usuario_busqueda_avanzada'),
     path('buscar-destino-avanzada/', views.destino_busqueda_avanzada, name='destino_busqueda_avanzada'),
     path('buscar-comentario-avanzada/', views.comentario_busqueda_avanzada, name='comentario_busqueda_avanzada'),
+    path('buscar-alojamiento-avanzada/', views.alojamiento_busqueda_avanzada, name='alojamiento_busqueda_avanzada'),
 ]
 

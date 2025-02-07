@@ -1,0 +1,71 @@
+{% extends 'principal.html' %}
+
+{% block contenido %}
+{% load django_bootstrap5 %}
+<h1>Búsqueda Avanzada de Alojamientos</h1>
+
+{% if errores %}
+    <div class="alert alert-danger">
+        <strong>Errores encontrados:</strong>
+        <ul>
+            {% for campo, lista_errores in errores.items %}
+                {% for error in lista_errores %}
+                    <li>{{ campo }}: {{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+
+
+<form method="GET" action="{% url 'alojamiento_busqueda_avanzada' %}">
+    {% csrf_token %}
+    
+    <!-- Campo de búsqueda por nombre -->
+    <div class="mb-4">
+        {% bootstrap_field formulario.nombre show_label=True %}
+    </div>
+
+    <!-- Campo de búsqueda por tipo de alojamiento -->
+    <div class="mb-4">
+        {% bootstrap_field formulario.tipo show_label=True %}
+    </div>
+    
+    <!-- Campo de búsqueda por capacidad -->
+    <div class="mb-4">
+        {% bootstrap_field formulario.capacidad show_label=True %}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Buscar Alojamiento</button>
+</form>
+
+
+{% if alojamientos_mostrar %}
+    <h2 class="mt-4">Resultados de la Búsqueda</h2>
+    <div class="row">
+        {% for alojamiento in alojamientos_mostrar %}
+        <div class="col-sm-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title mb-3"> {{ alojamiento.nombre }}</h4>
+                    <p class="card-text"><strong>Dirección:</strong> {{ alojamiento.direccion }}</p>
+                    <p class="card-text"><strong>Capacidad:</strong> {{ alojamiento.capacidad }}</p>
+                    <p class="card-text"><strong>Tipo:</strong> {{ alojamiento.tipo }}</p>
+                    
+                    <h4 class="card-title my-4">Destino:</h4>
+                    <p class="card-text"><strong>Destino:</strong> {{ alojamiento.destino.nombre }}</p>
+                    <p class="card-text"><strong>País:</strong> {{ alojamiento.destino.pais }}</p>
+                    <p class="card-text"><strong>Popularidad:</strong> {{ alojamiento.destino.popularidad }}</p>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="col-12">
+            <div class="alert alert-warning" role="alert">
+                No se encontraron alojamientos que coincidan con la búsqueda.
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+{% endif %}
+{% endblock %}

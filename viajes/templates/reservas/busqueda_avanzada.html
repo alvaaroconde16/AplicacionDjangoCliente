@@ -4,6 +4,19 @@
 {% load django_bootstrap5 %}
 <h1>Búsqueda Avanzada de Reservas</h1>
 
+{% if errores %}
+    <div class="alert alert-danger">
+        <strong>Errores encontrados:</strong>
+        <ul>
+            {% for campo, lista_errores in errores.items %}
+                {% for error in lista_errores %}
+                    <li>{{ campo }}: {{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+
 <form method="GET" action="{% url 'reserva_busqueda_avanzada' %}">
     {% csrf_token %}
     

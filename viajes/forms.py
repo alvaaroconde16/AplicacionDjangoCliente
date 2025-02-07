@@ -50,3 +50,14 @@ class BusquedaAvanzadaComentarioForm(forms.Form):
 
     # Campo de búsqueda por calificación
     calificacion = forms.FloatField(required=False, label="Calificación",)
+
+
+class BusquedaAvanzadaAlojamientoForm(forms.Form):
+    # Campo de búsqueda por nombre de alojamiento
+    nombre = forms.CharField(required=False, label="Nombre del Alojamiento")
+    
+    # Campo de búsqueda por tipo de alojamiento
+    tipo = forms.CharField(required=False, label="Tipo de Alojamiento")
+    
+    # Campo de búsqueda por capacidad mínima
+    capacidad = forms.IntegerField(required=False, label="Capacidad mínima")
