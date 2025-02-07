@@ -8,12 +8,12 @@
         <div class="col-sm-4 mb-2">
             <div class="card">
                 <div class="card-body">
-                    <h2>Nombre: {{ usuario.nombre }}</h2>
-                    <p>Correo: {{ usuario.correo }}</p>
-                    <p>Edad: {{ usuario.edad }}</p>
-                    <p>Teléfono: {{ usuario.telefono }}</p>
-                    <p>Fecha de registro: {{ usuario.fecha_registro|date:"d-m-Y" }}</p>
-                    <p>ID del usuario: {{ usuario.id }}</p>
+                    <h4 class="card-title">Nombre: {{ usuario.nombre }}</h4>
+                    <p class="card-text"><strong>Correo:</strong> {{ usuario.correo }}</p>
+                    <p class="card-text"><strong>Edad:</strong> {{ usuario.edad }}</p>
+                    <p class="card-text"><strong>Teléfono:</strong> {{ usuario.telefono }}</p>
+                    <p class="card-text"><strong>Fecha de registro:</strong> {{ usuario.fecha_registro|date:"d-m-Y" }}</p>
+                    <p class="card-text"><strong>ID del usuario:</strong> {{ usuario.id }}</p>
                 </div>
             </div>
         </div>

@@ -36,7 +36,19 @@
                         {{ request.user.username }}
                     </li>
                 {% endif %}
+
+                <!-- Menú de Usuarios con sublistas -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUsuarios" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Usuarios
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownUsuarios">
+                        <li><a class="dropdown-item" href="{% url 'usuarios_lista_api' %}">Lista de usuarios</a></li>
+                        <li><a class="dropdown-item" href="{% url 'usuario_busqueda_avanzada' %}">Buscar usuarios Avanzado</a></li>
+                    </ul>
+                </li>
                 
+
                 <!-- Menú de Reservas con sublistas -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownReservas" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -50,15 +62,17 @@
                     </ul>
                 </li>
 
-                <!-- Menú de Usuarios con sublistas -->
+
+                <!-- Menú de Destinos con sublistas -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUsuarios" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Usuarios
+                        Destinos
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownUsuarios">
-                        <li><a class="dropdown-item" href="{% url 'usuarios_lista_api' %}">Lista de usuarios</a></li>
+                        <li><a class="dropdown-item" href="{% url 'destino_busqueda_avanzada' %}">Buscar destinos Avanzado</a></li>
                     </ul>
                 </li>
+
 
                 <!-- Menú de Alojamientos con sublistas -->
                 <li class="nav-item dropdown">
@@ -69,6 +83,18 @@
                         <li><a class="dropdown-item" href="{% url 'alojamientosMejorados_lista_api' %}">Lista de alojamientos Mejorados</a></li>
                     </ul>
                 </li>
+
+
+                <!-- Menú de Destinos con sublistas -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUsuarios" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Comentarios
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownUsuarios">
+                        <li><a class="dropdown-item" href="{% url 'comentario_busqueda_avanzada' %}">Buscar comentarios Avanzado</a></li>
+                    </ul>
+                </li>
+
 
                 <!-- Menú de Transporte con sublistas -->
                 <li class="nav-item dropdown">

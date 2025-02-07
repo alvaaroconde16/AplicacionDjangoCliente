@@ -14,5 +14,8 @@ urlpatterns = [
     
     path('buscar-reservas/', views.reserva_busqueda_simple, name='reserva_busqueda_simple'),
     path('buscar-reservas-avanzada/', views.reserva_busqueda_avanzada, name='reserva_busqueda_avanzada'),
+    path('buscar-usuario-avanzada/', views.usuario_busqueda_avanzada, name='usuario_busqueda_avanzada'),
+    path('buscar-destino-avanzada/', views.destino_busqueda_avanzada, name='destino_busqueda_avanzada'),
+    path('buscar-comentario-avanzada/', views.comentario_busqueda_avanzada, name='comentario_busqueda_avanzada'),
 ]
 

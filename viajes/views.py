@@ -1,4 +1,4 @@
-from urllib.error import HTTPError
+from requests.exceptions import HTTPError
 from django.shortcuts import render,redirect, get_object_or_404
 from django.db.models import Q, Sum
 from django.contrib import messages
@@ -131,8 +131,136 @@ def reserva_busqueda_avanzada(request):
     else:
         formulario = BusquedaAvanzadaReservaForm(None)
         
-    return render(request, 'reservas/busqueda_avanzada.html', {"formulario": formulario})  
+    return render(request, 'reservas/busqueda_avanzada.html', {"formulario": formulario})
 
+
+def usuario_busqueda_avanzada(request):
+    if len(request.GET) > 0:
+        formulario = BusquedaAvanzadaUsuarioForm(request.GET)
+        
+        if formulario.is_valid():
+            try:
+                # Crear cabeceras necesarias para la petición (puedes adaptarlas según sea necesario)
+                headers = crear_cabecera()
+                
+                # Realizar la solicitud GET a la API
+                response = requests.get(
+                    'http://0.0.0.0:8000/api/v1/usuarios/busqueda_avanzada',  # URL de la API de búsqueda avanzada de reservas
+                    headers=headers,
+                    params=formulario.cleaned_data  # Pasar los datos del formulario validados
+                )
+                
+                if response.status_code == requests.codes.ok:
+                    usuarios = response.json()  # Obtener las usuarios de la respuesta JSON
+                    return render(request, 'usuarios/busqueda_avanzada.html', {"formulario": formulario, "usuarios_mostrar": usuarios})
+                else:
+                    print(response.status_code)
+                    response.raise_for_status()
+            except HTTPError as http_err:
+                print(f'Hubo un error en la petición: {http_err}')
+                if response.status_code == 400:
+                    errores = response.json()
+                    for error in errores:
+                        formulario.add_error(error, errores[error])  # Agregar los errores del formulario
+                    return render(request, 'usuarios/busqueda_avanzada.html', {"formulario": formulario, "errores": errores})
+                else:
+                    return mi_error_500(request)  # Retornar una página de error 500
+            except Exception as err:
+                print(f'Ocurrió un error: {err}')
+                return mi_error_500(request)
+        else:
+            # Si el formulario no es válido, redirige con los errores
+            return render(request, 'usuarios/busqueda_avanzada.html', {"formulario": formulario})
+    else:
+        formulario = BusquedaAvanzadaUsuarioForm(None)
+        
+    return render(request, 'usuarios/busqueda_avanzada.html', {"formulario": formulario})
+
+
+def destino_busqueda_avanzada(request):
+    if len(request.GET) > 0:
+        formulario = BusquedaAvanzadaDestinoForm(request.GET)
+        
+        if formulario.is_valid():
+            try:
+                # Crear cabeceras necesarias para la petición (puedes adaptarlas según sea necesario)
+                headers = crear_cabecera()
+                
+                # Realizar la solicitud GET a la API
+                response = requests.get(
+                    'http://0.0.0.0:8000/api/v1/destinos/busqueda_avanzada',  # URL de la API de búsqueda avanzada de reservas
+                    headers=headers,
+                    params=formulario.cleaned_data  # Pasar los datos del formulario validados
+                )
+                
+                if response.status_code == requests.codes.ok:
+                    destinos = response.json()  # Obtener las destinos de la respuesta JSON
+                    return render(request, 'destinos/busqueda_avanzada.html', {"formulario": formulario, "destinos_mostrar": destinos})
+                else:
+                    print(response.status_code)
+                    response.raise_for_status()
+            except HTTPError as http_err:
+                print(f'Hubo un error en la petición: {http_err}')
+                if response.status_code == 400:
+                    errores = response.json()
+                    for error in errores:
+                        formulario.add_error(error, errores[error])  # Agregar los errores del formulario
+                    return render(request, 'destinos/busqueda_avanzada.html', {"formulario": formulario, "errores": errores})
+                else:
+                    return mi_error_500(request)  # Retornar una página de error 500
+            except Exception as err:
+                print(f'Ocurrió un error: {err}')
+                return mi_error_500(request)
+        else:
+            # Si el formulario no es válido, redirige con los errores
+            return render(request, 'destinos/busqueda_avanzada.html', {"formulario": formulario})
+    else:
+        formulario = BusquedaAvanzadaDestinoForm(None)
+        
+    return render(request, 'destinos/busqueda_avanzada.html', {"formulario": formulario})
+
+
+def comentario_busqueda_avanzada(request):
+    if len(request.GET) > 0:
+        formulario = BusquedaAvanzadaComentarioForm(request.GET)
+        
+        if formulario.is_valid():
+            try:
+                # Crear cabeceras necesarias para la petición (puedes adaptarlas según sea necesario)
+                headers = crear_cabecera()
+                
+                # Realizar la solicitud GET a la API
+                response = requests.get(
+                    'http://0.0.0.0:8000/api/v1/comentarios/busqueda_avanzada',  # URL de la API de búsqueda avanzada de reservas
+                    headers=headers,
+                    params=formulario.cleaned_data  # Pasar los datos del formulario validados
+                )
+                
+                if response.status_code == requests.codes.ok:
+                    comentarios = response.json()  # Obtener las destinos de la respuesta JSON
+                    return render(request, 'comentarios/busqueda_avanzada.html', {"formulario": formulario, "comentarios_mostrar": comentarios})
+                else:
+                    print(response.status_code)
+                    response.raise_for_status()
+            except HTTPError as http_err:
+                print(f'Hubo un error en la petición: {http_err}')
+                if response.status_code == 400:
+                    errores = response.json()
+                    for error in errores:
+                        formulario.add_error(error, errores[error])  # Agregar los errores del formulario
+                    return render(request, 'comentarios/busqueda_avanzada.html', {"formulario": formulario, "errores": errores})
+                else:
+                    return mi_error_500(request)  # Retornar una página de error 500
+            except Exception as err:
+                print(f'Ocurrió un error: {err}')
+                return mi_error_500(request)
+        else:
+            # Si el formulario no es válido, redirige con los errores
+            return render(request, 'comentarios/busqueda_avanzada.html', {"formulario": formulario})
+    else:
+        formulario = BusquedaAvanzadaComentarioForm(None)
+        
+    return render(request, 'comentarios/busqueda_avanzada.html', {"formulario": formulario})
 
 
 

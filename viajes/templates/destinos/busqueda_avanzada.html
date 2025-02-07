@@ -1,0 +1,52 @@
+{% extends 'principal.html' %}
+
+{% block contenido %}
+{% load django_bootstrap5 %}
+<h1>Búsqueda Avanzada de Destinos</h1>
+
+<form method="GET" action="{% url 'destino_busqueda_avanzada' %}">
+    {% csrf_token %}
+    
+    <!-- Campo de búsqueda por nombre del destino -->
+    <div class="mb-4">
+        {% bootstrap_field formulario.nombre show_label=True %}
+    </div>
+
+    <!-- Campo de búsqueda por país del destino -->
+    <div class="mb-4">
+        {% bootstrap_field formulario.pais show_label=True %}
+    </div>
+
+    <!-- Campo de búsqueda por popularidad -->
+    <div class="mb-4">
+        {% bootstrap_field formulario.popularidad show_label=True %}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Buscar Destino</button>
+</form>
+
+{% if destinos_mostrar %}
+    <h2 class="mt-4">Resultados de la Búsqueda</h2>
+    <div class="row">
+        {% for destino in destinos_mostrar %}
+        <div class="col-sm-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title mb-3">{{ destino.nombre }}</h4>
+                    <p class="card-text"><strong>País:</strong> {{ destino.pais }}</p>
+                    <p class="card-text"><strong>Descripción:</strong> {{ destino.descripcion }}</p>
+                    <p class="card-text"><strong>Popularidad:</strong> {{ destino.popularidad }}</p>
+                    <p class="card-text"><strong>Destino #{{ destino.id }}</strong></p>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="col-12">
+            <div class="alert alert-warning" role="alert">
+                No se encontraron destinos que coincidan con la búsqueda.
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+{% endif %}
+{% endblock %}

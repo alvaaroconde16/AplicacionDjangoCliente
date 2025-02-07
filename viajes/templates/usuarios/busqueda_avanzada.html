@@ -1,0 +1,54 @@
+{% extends 'principal.html' %}
+
+{% block contenido %}
+{% load django_bootstrap5 %}
+<h1>Búsqueda Avanzada de Usuarios</h1>
+
+<form method="GET" action="{% url 'usuario_busqueda_avanzada' %}">
+    {% csrf_token %}
+
+    <!-- Campo de nombre -->
+    <div class="mb-4">
+        {% bootstrap_field formulario.nombre show_label=True %}
+    </div>
+
+    <!-- Campo de correo -->
+    <div class="mb-4">
+        {% bootstrap_field formulario.correo show_label=True %}
+    </div>
+
+    <!-- Campo de edad -->
+    <div class="mb-4">
+        {% bootstrap_field formulario.edad show_label=True %}
+    </div>
+
+    <!-- Botón para buscar -->
+    <button type="submit" class="btn btn-primary">Buscar</button>
+</form>
+
+{% if usuarios_mostrar %}
+    <h2 class="mt-4">Resultados de la Búsqueda</h2>
+    <div class="row">
+        {% for usuario in usuarios_mostrar %}
+        <div class="col-sm-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Nombre: {{ usuario.nombre }}</h4>
+                    <p class="card-text"><strong>Correo:</strong> {{ usuario.correo }}</p>
+                    <p class="card-text"><strong>Edad:</strong> {{ usuario.edad }}</p>
+                    <p class="card-text"><strong>Teléfono:</strong> {{ usuario.telefono }}</p>
+                    <p class="card-text"><strong>Fecha de registro:</strong> {{ usuario.fecha_registro|date:"d-m-Y" }}</p>
+                    <p class="card-text"><strong>ID del usuario:</strong> {{ usuario.id }}</p>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="col-12">
+            <div class="alert alert-warning" role="alert">
+                No se encontraron usuarios que coincidan con la búsqueda.
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+{% endif %}
+{% endblock %}
