@@ -32,7 +32,7 @@ def crear_cabecera():
 
 # Definir una constante para la base de la URL de la API.
 # Esto permite cambiar la versión de la API en un solo lugar si es necesario en el futuro.
-API_BASE_URL = "http://0.0.0.0:8000/api/v1/"
+API_BASE_URL = "http://alvaroconde.pythonanywhere.com/api/v1/"
 
 
 # En lugar de usar siempre response.json(), creamos una función que detecta 
@@ -56,7 +56,7 @@ def procesar_respuesta(response):
 
 def reservas_lista_api(request):
     headers = {'Authorization' : 'Bearer '+env('OAUTH2_ACCESS_TOKEN_ADMIN')}    
-    response = requests.get('https://alvaroconde.pythonanywhere.com/api/v1/reservas', headers=headers)
+    response = requests.get(API_BASE_URL + 'reservas', headers=headers)
     reservas = response.json()
     return render(request, 'reservas/reserva_api.html', {'reservas_mostrar':reservas})
         
@@ -64,7 +64,7 @@ def reservas_lista_api(request):
 
 def usuarios_lista_api(request):
     headers = {'Authorization': 'Bearer ' + env('OAUTH2_ACCESS_TOKEN_PROVEEDOR')} 
-    response = requests.get('http://alvaroconde.pythonanywhere.com/api/v1/usuarios', headers=headers)
+    response = requests.get(API_BASE_URL + 'usuarios', headers=headers)
     usuarios = response.json()
     return render(request, 'usuarios/usuario_api.html', {'usuarios_mostrar': usuarios})
 
@@ -72,7 +72,7 @@ def usuarios_lista_api(request):
 
 def reservasMejoradas_lista_api(request):
     headers = {'Authorization': 'Bearer ' + env('OAUTH2_ACCESS_TOKEN_CLIENTE')} 
-    response = requests.get('http://alvaroconde.pythonanywhere.com/api/v1/reservasMejoradas', headers=headers)
+    response = requests.get(API_BASE_URL + 'reservasMejoradas', headers=headers)
     reservas = response.json()
     return render(request, 'reservas/reservaMejorada_api.html', {'reservas_mostrar': reservas})
 
@@ -80,7 +80,7 @@ def reservasMejoradas_lista_api(request):
 
 def alojamientosMejorados_lista_api(request):
     headers = {'Authorization': 'Bearer ' + env('OAUTH2_ACCESS_TOKEN_ADMIN')} 
-    response = requests.get('http://alvaroconde.pythonanywhere.com/api/v1/alojamientosMejorados', headers=headers)
+    response = requests.get(API_BASE_URL + 'alojamientosMejorados', headers=headers)
     alojamientos = response.json()
     return render(request, 'alojamientos/alojamientoMejorado_api.html', {'alojamientos_mostrar': alojamientos})
 
@@ -88,7 +88,7 @@ def alojamientosMejorados_lista_api(request):
 
 def transportesMejorados_lista_api(request):
     headers = {'Authorization': 'Bearer ' + env('OAUTH2_ACCESS_TOKEN_CLIENTE')} 
-    response = requests.get('http://alvaroconde.pythonanywhere.com/api/v1/transportesMejorados', headers=headers)
+    response = requests.get(API_BASE_URL + 'transportesMejorados', headers=headers)
     transportes = response.json()
     return render(request, 'transportes/transporteMejorado_api.html', {'transportes_mostrar': transportes})
 
