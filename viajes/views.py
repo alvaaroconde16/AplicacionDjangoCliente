@@ -10,6 +10,7 @@ import os
 from pathlib import Path
 from .forms import *
 import xml.etree.ElementTree as ET
+import json
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -350,6 +351,51 @@ def alojamiento_busqueda_avanzada(request):
         formulario = BusquedaAvanzadaAlojamientoForm(None)
         
     return render(request, 'alojamientos/busqueda_avanzada.html', {"formulario": formulario, "errores": errores})
+
+
+
+def reserva_crear(request):
+    if request.method == "POST":
+        try:
+            formulario = ReservaForm(request.POST)
+            headers = crear_cabecera()
+            datos = formulario.data.copy()
+            
+            datos["fecha_salida"] = str(datetime.datetime.strptime(datos["fecha_salida"], "%Y-%m-%dT%H:%M"))
+            datos["fecha_llegada"] = str(datetime.datetime.strptime(datos["fecha_llegada"], "%Y-%m-%dT%H:%M"))
+            
+            response = requests.post(
+                'http://0.0.0.0:8000/api/v1/reservas/crear',
+                headers=headers,
+                data=json.dumps(datos)
+            )
+            
+            if response.status_code == requests.codes.ok:
+                return redirect("reservas_lista_api")
+            else:
+                print(response.status_code)
+                response.raise_for_status()
+                
+        except HTTPError as http_err:
+            print(f'Hubo un error en la petición: {http_err}')
+            if (response.status_code == 400):
+                errores = response.json()
+                
+                for error in errores:
+                    formulario.add_error(error, errores[error])
+                
+                return render(request, 'reservas/create.html', {"formulario": formulario})
+            else:
+                return mi_error_500(request)
+            
+        except Exception as err:
+            print(f'Ocurrió un error: {err}')
+            return mi_error_500(request)
+        
+    else:
+        formulario = ReservaForm(None)
+    
+    return render(request, 'reservas/create.html', {"formulario": formulario})
 
 
 
