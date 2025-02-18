@@ -1,0 +1,16 @@
+{% extends "principal.html" %}
+
+{% block contenido %}
+<h1>Actualizar Código de Reserva</h1>
+
+<form action="{% url 'reserva_actualizar_codigo' reserva.id %}" method="post" enctype="multipart/form-data">
+    {% load django_bootstrap5 %}
+    {% csrf_token %}  <!-- Esto es para proteger el formulario contra CSRF -->
+    
+    <div class="mb-4">
+        {% bootstrap_field formulario.codigo_reserva show_label=True %}
+    </div>
+
+    <button type="submit" class="btn btn-warning">Actualizar Código</button>
+</form>
+{% endblock %}

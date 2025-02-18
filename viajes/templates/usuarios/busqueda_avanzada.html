@@ -52,6 +52,20 @@
                     <p class="card-text"><strong>Teléfono:</strong> {{ usuario.telefono }}</p>
                     <p class="card-text"><strong>Fecha de registro:</strong> {{ usuario.fecha_registro|date:"d-m-Y" }}</p>
                     <p class="card-text"><strong>ID del usuario:</strong> {{ usuario.id }}</p>
+
+                    <!-- Botón para actualizar -->
+                    <a href="{% url 'usuario_editar' usuario.id %}" class="btn btn-primary mb-1">Actualizar Usuario</a>
+
+                    <!-- Botón para actualizar nombre -->
+                    <a href="{% url 'usuario_actualizar_nombre' usuario.id %}" class="btn btn-warning mb-1">Actualizar Nombre</a>
+
+                    <!-- Formulario para eliminar usuario -->
+                    <form action="{% url 'usuario_eliminar' usuario.id %}" method="POST">
+                        {% csrf_token %}
+                        <button class="btn btn-danger" type="submit" onclick="return confirmarEliminacion();">
+                            Eliminar
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -64,4 +78,10 @@
     {% endfor %}
     </div>
 {% endif %}
+
+<script type="text/javascript">
+    function confirmarEliminacion() {
+        return confirm("¿Estás seguro de que deseas eliminar esta reserva? Esta acción no se puede deshacer.");
+    }
+</script>
 {% endblock %}

@@ -36,7 +36,9 @@ def crear_cabecera():
 
 # Definir una constante para la base de la URL de la API.
 # Esto permite cambiar la versión de la API en un solo lugar si es necesario en el futuro.
-API_BASE_URL = "http://alvaroconde.pythonanywhere.com/api/v1/"
+API_BASE_URL = "http://0.0.0.0:8000/api/v1/"
+
+# alvaroconde.pythonanywhere.com
 
 
 # En lugar de usar siempre response.json(), creamos una función que detecta 
@@ -356,6 +358,8 @@ def alojamiento_busqueda_avanzada(request):
     return render(request, 'alojamientos/busqueda_avanzada.html', {"formulario": formulario, "errores": errores})
 
 
+#######################################################################################################################################################################
+
 
 def reserva_crear(request):
     if request.method == "POST":
@@ -402,6 +406,53 @@ def reserva_crear(request):
 
 
 
+def usuario_crear(request):
+    if request.method == "POST":
+        try:
+            formulario = UsuarioForm(request.POST, request.FILES)  # Para incluir los archivos (imagen)
+            headers = crear_cabecera() 
+            datos = formulario.data.copy()
+
+            if datos.get("fecha_registro"):
+                datos["fecha_registro"] = str(datetime.strptime(datos["fecha_registro"], "%Y-%m-%d").date())
+            
+            response = requests.post(
+                'http://0.0.0.0:8000/api/v1/usuarios/crear',  
+                headers=headers,
+                data=json.dumps(datos),  # Convertimos los datos a JSON
+                files=request.FILES  # Enviamos los archivos (imagen de perfil)
+            )
+
+            if response.status_code == requests.codes.ok:  
+                return redirect("usuarios_lista_api")  
+            else:
+                print(response.status_code)
+                response.raise_for_status()
+
+        except HTTPError as http_err:
+            print(f'Hubo un error en la petición: {http_err}')
+            if response.status_code == 400:  # Si hay un error 400, mostramos los errores del formulario
+                errores = response.json()
+                for error in errores:
+                    formulario.add_error(error, errores[error])
+
+                return render(request, 'usuarios/create.html', {"formulario": formulario})
+            else:
+                return mi_error_500(request)  # Manejamos el error genérico si no es 400
+
+        except Exception as err:
+            print(f'Ocurrió un error: {err}')
+            return mi_error_500(request)  # Manejamos cualquier otro error genérico
+
+    else:
+        formulario = UsuarioForm()  # Si no es POST, mostramos el formulario vacío
+
+    return render(request, 'usuarios/create.html', {"formulario": formulario})
+
+
+#######################################################################################################################################################################
+
+
 from .cliente_api import cliente_api
 
 from datetime import datetime
@@ -425,7 +476,7 @@ def reserva_editar(request, reserva_id):
             'fecha_salida': datetime.strptime(reserva['fecha_salida'], '%d-%m-%Y').date(),
             'fecha_llegada': datetime.strptime(reserva['fecha_llegada'], '%d-%m-%Y').date(),
             'numero_personas': reserva['numero_personas'],
-            'precio': float(reserva['precio']) if isinstance(reserva['precio'], Decimal) else reserva['precio']  # 🔹 Convierte Decimal a float
+            'precio': float(reserva['precio']) if isinstance(reserva['precio'], Decimal) else reserva['precio']  # Convierte Decimal a float
         }
     )
     
@@ -453,6 +504,190 @@ def reserva_editar(request, reserva_id):
 
 
 
+def usuario_editar(request, usuario_id):
+    datosFormulario = None
+
+    # Si el método es POST, obtenemos los datos del formulario
+    if request.method == "POST":
+        datosFormulario = request.POST
+    
+    # Obtener los datos del usuario desde el helper
+    usuario = helper.obtener_usuario(usuario_id)
+    
+    # Crear un formulario con los datos iniciales
+    formulario = UsuarioForm(
+        datosFormulario,
+        initial={
+            'nombre': usuario['nombre'],
+            'correo': usuario['correo'],
+            'telefono': usuario['telefono'],
+            'edad': usuario['edad'],
+            'contraseña': usuario['contraseña'],  # No es recomendable cargar contraseñas, podrías omitirlo
+            'fecha_registro': datetime.strptime(usuario['fecha_registro'], '%Y-%m-%d').date(),
+        }
+    )
+    
+    # Si el formulario es enviado con método POST y es válido
+    if request.method == "POST" and formulario.is_valid():
+        datos = formulario.cleaned_data.copy()
+        
+        # Convertir la fecha a formato YYYY-MM-DD
+        if datos["fecha_registro"]:
+            datos["fecha_registro"] = datos["fecha_registro"].strftime('%Y-%m-%d')
+        else:
+            datos["fecha_registro"] = None
+
+        # Hacer la petición API para actualizar usuario
+        cliente = cliente_api(
+            os.getenv("OAUTH2_ACCESS_TOKEN"), "PUT", f'usuarios/editar/{usuario_id}', datos
+        )
+        cliente.realizar_peticion_api()
+
+        if cliente.es_respuesta_correcta():
+            return redirect("usuarios_lista_api")
+        elif cliente.es_error_validacion_datos():
+            cliente.incluir_errores_formulario(formulario)
+        else:
+            return tratar_errores(request, cliente.codigoRespuesta)
+    
+    return render(request, 'usuarios/actualizar.html', {"formulario": formulario, "usuario": usuario})
+
+
+#######################################################################################################################################################################
+
+
+def reserva_actualizar_codigo(request, reserva_id):
+    datosFormulario = None
+    reserva = helper.obtener_reserva(reserva_id)  # Obtenemos los datos de la reserva
+
+    formulario = ReservaActualizarCodigoForm(datosFormulario,
+            initial={
+                'codigo_reserva': reserva['codigo_reserva'],
+            }
+    )
+
+    if request.method == "POST":
+        try:
+            formulario = ReservaActualizarCodigoForm(request.POST)
+            headers = crear_cabecera()
+            datos = request.POST.copy()
+            response = requests.patch(
+                API_BASE_URL + "reservas/actualizar/codigo/" + str(reserva_id),
+                headers=headers,
+                data=json.dumps(datos)
+            )
+
+            if response.status_code == requests.codes.ok:
+                return redirect("reservas_lista_api")  # Redirige a la vista de mostrar la reserva
+            else:
+                print(response.status_code)
+                response.raise_for_status()
+
+        except HTTPError as http_err:
+            print(f'Hubo un error en la petición: {http_err}')
+            if response.status_code == 400:
+                errores = response.json()
+                for error in errores:
+                    formulario.add_error(error, errores[error])
+                return render(request, 'reservas/actualizar_codigo.html', {"formulario": formulario, "reserva": reserva})
+            else:
+                return mi_error_500(request)  # Esta es una función para manejar errores internos
+
+        except Exception as err:
+            print(f'Ocurrió un error: {err}')
+            return mi_error_500(request)
+
+    return render(request, 'reservas/actualizar_codigo.html', {"formulario": formulario, "reserva": reserva})
+
+
+def usuario_actualizar_nombre(request, usuario_id):
+    datosFormulario = None
+    usuario = helper.obtener_usuario(usuario_id)  # Obtenemos los datos del usuario
+
+    formulario = UsuarioActualizarNombreForm(datosFormulario,
+            initial={
+                'nombre': usuario['nombre'],  # Solo el campo 'nombre' será editable
+            }
+    )
+
+    if request.method == "POST":
+        try:
+            formulario = UsuarioActualizarNombreForm(request.POST)  # Volvemos a instanciar el formulario con los datos POST
+            headers = crear_cabecera()  # Función que genera las cabeceras necesarias (token de autenticación, etc.)
+            datos = request.POST.copy()  # Copiamos los datos del formulario
+
+            # Realizamos el PATCH a la API para actualizar el nombre
+            response = requests.patch(
+                API_BASE_URL + "usuarios/actualizar/nombre/" + str(usuario_id),  # Endpoint para actualizar el nombre del usuario
+                headers=headers,
+                data=json.dumps(datos)  # Enviamos los datos como JSON
+            )
+
+            if response.status_code == requests.codes.ok:  # Si la respuesta es exitosa
+                return redirect("usuarios_lista_api")  # Redirige a la vista de la lista de usuarios
+            else:
+                print(response.status_code)
+                response.raise_for_status()
+
+        except HTTPError as http_err:
+            print(f'Hubo un error en la petición: {http_err}')
+            if response.status_code == 400:  # Si hay un error de validación
+                errores = response.json()
+                for error in errores:
+                    formulario.add_error(error, errores[error])  # Añadimos los errores al formulario
+                return render(request, 'usuarios/actualizar_nombre.html', {"formulario": formulario, "usuario": usuario})
+            else:
+                return mi_error_500(request)  # Manejo de errores internos
+
+        except Exception as err:
+            print(f'Ocurrió un error: {err}')
+            return mi_error_500(request)  # Manejo general de errores
+
+    return render(request, 'usuarios/actualizar_nombre.html', {"formulario": formulario, "usuario": usuario})
+
+
+#######################################################################################################################################################################
+
+
+def reserva_eliminar(request, reserva_id):
+    try:
+        headers = crear_cabecera()
+        response = requests.delete(
+            API_BASE_URL + "reservas/eliminar/" + str(reserva_id),
+            headers=headers,
+        )
+        if response.status_code == requests.codes.ok:
+            return redirect("reservas_lista_api")
+        else:
+            print(response.status_code)
+            response.raise_for_status()
+    except Exception as err:
+        print(f'Ocurrió un error: {err}')
+        return mi_error_500(request)
+    
+    return redirect("reservas_lista_api")
+
+
+def usuario_eliminar(request, usuario_id):
+    try:
+        headers = crear_cabecera()
+        response = requests.delete(
+            API_BASE_URL + "usuarios/eliminar/" + str(usuario_id),
+            headers=headers,
+        )
+        if response.status_code == requests.codes.ok:
+            return redirect("usuarios_lista_api")
+        else:
+            print(response.status_code)
+            response.raise_for_status()
+    except Exception as err:
+        print(f'Ocurrió un error: {err}')
+        return mi_error_500(request)
+    
+    return redirect("usuarios_lista_api")
+
+
+#######################################################################################################################################################################
 
 
 def tratar_errores(request,codigo):

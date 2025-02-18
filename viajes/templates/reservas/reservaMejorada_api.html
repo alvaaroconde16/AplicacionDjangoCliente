@@ -19,6 +19,20 @@
             <p>Nombre: {{ reserva.usuario.nombre }}</p>
             <p>Telefono: {{ reserva.usuario.telefono }}</p>
             <p>Correo: {{ reserva.usuario.correo }}</p>
+
+            <!-- Botón para actualizar -->
+            <a href="{% url 'reserva_editar' reserva.id %}" class="btn btn-primary mb-1">Actualizar Reserva</a>
+
+            <!-- Botón para actualizar nombre -->
+            <a href="{% url 'reserva_actualizar_codigo' reserva.id %}" class="btn btn-warning mb-1">Actualizar Código</a>
+
+            <!-- Formulario para eliminar reserva -->
+            <form action="{% url 'reserva_eliminar' reserva.id %}" method="POST">
+                {% csrf_token %}
+                <button class="btn btn-danger" type="submit" onclick="return confirmarEliminacion();">
+                    Eliminar
+                </button>
+            </form>
           </div>
         </div>
       </div>
@@ -26,5 +40,11 @@
       <p>No hay reservas disponibles.</p>
     {% endfor %}
   </div>
+
+  <script type="text/javascript">
+    function confirmarEliminacion() {
+        return confirm("¿Estás seguro de que deseas eliminar esta reserva? Esta acción no se puede deshacer.");
+    }
+</script>
 
 {% endblock %}

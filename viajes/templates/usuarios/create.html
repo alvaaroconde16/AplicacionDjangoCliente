@@ -1,0 +1,66 @@
+{% extends "principal.html" %}
+
+{% block contenido %}
+<h1>Formulario de Usuario</h1>
+
+<form action="{% url 'usuario_crear' %}" method="post" enctype="multipart/form-data">
+    {% load django_bootstrap5 %}
+    {% csrf_token %}  <!-- Protege el formulario contra CSRF -->
+    
+    <div class="mb-4">
+        {% bootstrap_field formulario.nombre show_label=True %}
+        <div class="invalid-feedback">
+            {% for error in formulario.nombre.errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="mb-4">
+        {% bootstrap_field formulario.correo show_label=True %}
+        <div class="invalid-feedback">
+            {% for error in formulario.correo.errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="mb-4">
+        {% bootstrap_field formulario.telefono show_label=True %}
+        <div class="invalid-feedback">
+            {% for error in formulario.telefono.errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="mb-4">
+        {% bootstrap_field formulario.edad show_label=True %}
+        <div class="invalid-feedback">
+            {% for error in formulario.edad.errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="mb-4">
+        {% bootstrap_field formulario.contraseña show_label=True %}
+        <div class="invalid-feedback">
+            {% for error in formulario.contraseña.errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="mb-4">
+        {% bootstrap_field formulario.fecha_registro show_label=True %}
+        <div class="invalid-feedback">
+            {% for error in formulario.fecha_registro.errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Crear Usuario</button>
+</form>
+{% endblock %}

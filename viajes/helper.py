@@ -26,3 +26,10 @@ class helper:
         response = requests.get('http://0.0.0.0:8000/api/v1/reservas/'+str(id), headers=headers)
         reserva = response.json()
         return reserva
+    
+
+    def obtener_usuario(id):
+        headers = {'Authorization': 'Bearer '+env("OAUTH2_ACCESS_TOKEN")} 
+        response = requests.get('http://0.0.0.0:8000/api/v1/usuarios/'+str(id), headers=headers)
+        usuario = response.json()
+        return usuario

@@ -111,3 +111,68 @@ class ReservaForm(forms.Form):
             widget=forms.Select,
             required=True
         )
+
+
+class UsuarioForm(forms.Form):
+    nombre = forms.CharField(
+        label="Nombre Completo",
+        required=True,
+        max_length=200,
+        help_text="Ingrese el nombre completo"
+    )
+    
+    correo = forms.EmailField(
+        label="Correo Electrónico",
+        required=True,
+        help_text="Ingrese un correo electrónico válido"
+    )
+    
+    telefono = forms.CharField(
+        label="Teléfono",
+        required=True,
+        max_length=20,
+        help_text="Ingrese un número de teléfono"
+    )
+    
+    edad = forms.IntegerField(
+        label="Edad",
+        required=True,
+        min_value=18,
+        help_text="Debe ser mayor de 18 años"
+    )
+    
+    contraseña = forms.CharField(
+        label="Contraseña",
+        widget=forms.PasswordInput,
+        required=True,
+        max_length=200,
+        help_text="Ingrese una contraseña segura"
+    )
+    
+    fecha_registro = forms.DateField(
+        label="Fecha de Registro",
+        initial=datetime.today().date(),
+        widget=forms.DateInput(attrs={'type': 'date'}),
+        required=False
+    )
+    
+
+#######################################################################################################################################################################
+
+
+class ReservaActualizarCodigoForm(forms.Form):
+    codigo_reserva = forms.CharField(
+        label="Código de Reserva",
+        required=True,
+        max_length=20,
+        help_text="Máximo 20 caracteres"
+    )
+
+
+class UsuarioActualizarNombreForm(forms.Form):
+    nombre = forms.CharField(
+        label="Nombre Completo",
+        required=True,
+        max_length=200,
+        help_text="Ingrese el nombre completo"
+    )

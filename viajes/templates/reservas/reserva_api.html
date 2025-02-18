@@ -16,7 +16,18 @@
                     <p>Precio: {{ reserva.precio|floatformat:2 }}</p>
 
                     <!-- Botón para actualizar -->
-                    <a href="{% url 'reserva_editar' reserva.id %}" class="btn btn-primary">Actualizar Reserva</a>
+                    <a href="{% url 'reserva_editar' reserva.id %}" class="btn btn-primary mb-1">Actualizar Reserva</a>
+
+                    <!-- Botón para actualizar nombre -->
+                    <a href="{% url 'reserva_actualizar_codigo' reserva.id %}" class="btn btn-warning mb-1">Actualizar Código</a>
+
+                    <!-- Formulario para eliminar reserva -->
+                    <form action="{% url 'reserva_eliminar' reserva.id %}" method="POST">
+                        {% csrf_token %}
+                        <button class="btn btn-danger" type="submit" onclick="return confirmarEliminacion();">
+                            Eliminar
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -24,5 +35,11 @@
         <h1>Lo sentimos pero no hay reservas</h1>
     {% endfor %}
 </div>    
+
+<script type="text/javascript">
+    function confirmarEliminacion() {
+        return confirm("¿Estás seguro de que deseas eliminar esta reserva? Esta acción no se puede deshacer.");
+    }
+</script>
 
 {% endblock  %}
