@@ -404,6 +404,9 @@ def reserva_crear(request):
 
 from .cliente_api import cliente_api
 
+from datetime import datetime
+from decimal import Decimal
+
 def reserva_editar(request, reserva_id):
     datosFormulario = None
     
@@ -414,7 +417,7 @@ def reserva_editar(request, reserva_id):
     # Obtener los datos de la reserva desde el helper
     reserva = helper.obtener_reserva(reserva_id)
     
-    # Crear un formulario con los datos de la reserva
+    # Crear un formulario con los datos iniciales
     formulario = ReservaForm(
         datosFormulario,
         initial={
@@ -422,29 +425,32 @@ def reserva_editar(request, reserva_id):
             'fecha_salida': datetime.strptime(reserva['fecha_salida'], '%d-%m-%Y').date(),
             'fecha_llegada': datetime.strptime(reserva['fecha_llegada'], '%d-%m-%Y').date(),
             'numero_personas': reserva['numero_personas'],
-            'precio': reserva['precio']
+            'precio': float(reserva['precio']) if isinstance(reserva['precio'], Decimal) else reserva['precio']  # 🔹 Convierte Decimal a float
         }
     )
     
-    # Si el formulario se envió con método POST y es válido
+    # Si el formulario es enviado con método POST y es válido
     if request.method == "POST" and formulario.is_valid():
-        # Preparamos los datos para la actualización
         datos = formulario.cleaned_data.copy()
-        datos["fecha_salida"] = datos["fecha_salida"].strftime('%Y-%m-%d')  # Asegúrate de formatear las fechas
+        datos["fecha_salida"] = datos["fecha_salida"].strftime('%Y-%m-%d')
         datos["fecha_llegada"] = datos["fecha_llegada"].strftime('%Y-%m-%d')
-        
-        cliente = cliente_api(request.session["OAUTH2_ACCESS_TOKEN"],"PUT",'reservas/editar/'+str(reserva_id),datos)
+
+        # 🔹 Asegurar que el precio se convierta a float antes de enviarlo
+        if isinstance(datos["precio"], Decimal):
+            datos["precio"] = float(datos["precio"])
+
+        cliente = cliente_api(env("OAUTH2_ACCESS_TOKEN"), "PUT", f'reservas/editar/{reserva_id}', datos)
         cliente.realizar_peticion_api()
-        if(cliente.es_respuesta_correcta()):
-            return redirect("reserva_lista_api",reserva_id=reserva_id)
+
+        if cliente.es_respuesta_correcta():
+            return redirect("reservas_lista_api")
+        elif cliente.es_error_validacion_datos():
+            cliente.incluir_errores_formulario(formulario)
         else:
-            if(cliente.es_error_validacion_datos()):
-                cliente.incluir_errores_formulario(formulario)
-            else:
-                return tratar_errores(request,cliente.codigoRespuesta)
-        
-    # Renderizar la vista con el formulario
+            return tratar_errores(request, cliente.codigoRespuesta)
+    
     return render(request, 'reservas/actualizar.html', {"formulario": formulario, "reserva": reserva})
+
 
 
 
