@@ -77,16 +77,16 @@ class ReservaForm(forms.Form):
         help_text="Máximo 20 caracteres"
     )
     
-    fecha_salida = forms.DateTimeField(
+    fecha_salida = forms.DateField(
         label="Fecha de Salida",
-        initial=datetime.now,
-        widget=forms.DateTimeInput(attrs={'type': 'datetime-local'})
+        initial=datetime.today().date(),
+        widget=forms.DateInput(attrs={'type': 'date'})
     )
     
-    fecha_llegada = forms.DateTimeField(
+    fecha_llegada = forms.DateField(
         label="Fecha de Llegada",
-        initial=datetime.now,
-        widget=forms.DateTimeInput(attrs={'type': 'datetime-local'})
+        initial=datetime.today().date(),
+        widget=forms.DateInput(attrs={'type': 'date'})
     )
     
     numero_personas = forms.IntegerField(

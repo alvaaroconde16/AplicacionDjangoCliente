@@ -1,0 +1,66 @@
+{% extends "principal.html" %}
+
+{% block contenido %}
+<h1>Editar Reserva</h1>
+
+<form action="{% url 'reserva_editar' reserva.id %}" method="post">
+    {% load django_bootstrap5 %}
+    {% csrf_token %}
+    
+    <div class="mb-4">
+        {% bootstrap_field formulario.codigo_reserva show_label=True %}
+        <div class="invalid-feedback">
+            {% for error in formulario.codigo_reserva.errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="mb-4">
+        {% bootstrap_field formulario.fecha_salida show_label=True %}
+        <div class="invalid-feedback">
+            {% for error in formulario.fecha_salida.errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="mb-4">
+        {% bootstrap_field formulario.fecha_llegada show_label=True %}
+        <div class="invalid-feedback">
+            {% for error in formulario.fecha_llegada.errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="mb-4">
+        {% bootstrap_field formulario.numero_personas show_label=True %}
+        <div class="invalid-feedback">
+            {% for error in formulario.numero_personas.errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="mb-4">
+        {% bootstrap_field formulario.precio show_label=True %}
+        <div class="invalid-feedback">
+            {% for error in formulario.precio.errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="mb-4">
+        {% bootstrap_field formulario.usuario show_label=True %}
+        <div class="invalid-feedback">
+            {% for error in formulario.usuario.errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Actualizar Reserva</button>
+</form>
+{% endblock %}

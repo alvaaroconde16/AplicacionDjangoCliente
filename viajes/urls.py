@@ -20,5 +20,7 @@ urlpatterns = [
     path('buscar-alojamiento-avanzada/', views.alojamiento_busqueda_avanzada, name='alojamiento_busqueda_avanzada'),
     
     path('reservas/crear', views.reserva_crear, name='reserva_crear'),
+    
+    path('reservas/editar/<int:reserva_id>/', views.reserva_editar, name='reserva_editar'),
 ]
 

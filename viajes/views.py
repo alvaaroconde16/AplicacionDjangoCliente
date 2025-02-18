@@ -4,13 +4,16 @@ from django.db.models import Q, Sum
 from django.contrib import messages
 from django.contrib.auth.models import Group
 import requests
+from datetime import datetime
 
+from django.conf import settings
 import environ
 import os
 from pathlib import Path
 from .forms import *
 import xml.etree.ElementTree as ET
 import json
+from .helper import helper
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -361,8 +364,8 @@ def reserva_crear(request):
             headers = crear_cabecera()
             datos = formulario.data.copy()
             
-            datos["fecha_salida"] = str(datetime.datetime.strptime(datos["fecha_salida"], "%Y-%m-%dT%H:%M"))
-            datos["fecha_llegada"] = str(datetime.datetime.strptime(datos["fecha_llegada"], "%Y-%m-%dT%H:%M"))
+            datos["fecha_salida"] = str(datetime.strptime(datos["fecha_salida"], "%Y-%m-%d").date())
+            datos["fecha_llegada"] = str(datetime.strptime(datos["fecha_llegada"], "%Y-%m-%d").date())
             
             response = requests.post(
                 'http://0.0.0.0:8000/api/v1/reservas/crear',
@@ -398,6 +401,59 @@ def reserva_crear(request):
     return render(request, 'reservas/create.html', {"formulario": formulario})
 
 
+
+from .cliente_api import cliente_api
+
+def reserva_editar(request, reserva_id):
+    datosFormulario = None
+    
+    # Si el método es POST, obtenemos los datos del formulario
+    if request.method == "POST":
+        datosFormulario = request.POST
+    
+    # Obtener los datos de la reserva desde el helper
+    reserva = helper.obtener_reserva(reserva_id)
+    
+    # Crear un formulario con los datos de la reserva
+    formulario = ReservaForm(
+        datosFormulario,
+        initial={
+            'codigo_reserva': reserva['codigo_reserva'],
+            'fecha_salida': datetime.strptime(reserva['fecha_salida'], '%d-%m-%Y').date(),
+            'fecha_llegada': datetime.strptime(reserva['fecha_llegada'], '%d-%m-%Y').date(),
+            'numero_personas': reserva['numero_personas'],
+            'precio': reserva['precio']
+        }
+    )
+    
+    # Si el formulario se envió con método POST y es válido
+    if request.method == "POST" and formulario.is_valid():
+        # Preparamos los datos para la actualización
+        datos = formulario.cleaned_data.copy()
+        datos["fecha_salida"] = datos["fecha_salida"].strftime('%Y-%m-%d')  # Asegúrate de formatear las fechas
+        datos["fecha_llegada"] = datos["fecha_llegada"].strftime('%Y-%m-%d')
+        
+        cliente = cliente_api(request.session["OAUTH2_ACCESS_TOKEN"],"PUT",'reservas/editar/'+str(reserva_id),datos)
+        cliente.realizar_peticion_api()
+        if(cliente.es_respuesta_correcta()):
+            return redirect("reserva_lista_api",reserva_id=reserva_id)
+        else:
+            if(cliente.es_error_validacion_datos()):
+                cliente.incluir_errores_formulario(formulario)
+            else:
+                return tratar_errores(request,cliente.codigoRespuesta)
+        
+    # Renderizar la vista con el formulario
+    return render(request, 'reservas/actualizar.html', {"formulario": formulario, "reserva": reserva})
+
+
+
+
+def tratar_errores(request,codigo):
+    if codigo == 404:
+        return mi_error_404(request)
+    else:
+        return mi_error_500(request)
 
 
 #Páginas de Error

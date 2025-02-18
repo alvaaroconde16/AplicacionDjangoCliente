@@ -14,6 +14,9 @@
                     <p>Número de Personas: {{ reserva.numero_personas }}</p>
                     <p><strong>Reserva #{{ forloop.counter }}</strong></p>
                     <p>Precio: {{ reserva.precio|floatformat:2 }}</p>
+
+                    <!-- Botón para actualizar -->
+                    <a href="{% url 'reserva_editar' reserva.id %}" class="btn btn-primary">Actualizar Reserva</a>
                 </div>
             </div>
         </div>
