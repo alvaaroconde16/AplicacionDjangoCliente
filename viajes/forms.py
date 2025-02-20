@@ -156,6 +156,66 @@ class UsuarioForm(forms.Form):
         required=False
     )
     
+    
+class TransporteForm(forms.Form):
+    nombre = forms.CharField(
+        label="Nombre del Transporte",
+        required=True,
+        max_length=200,
+        help_text="Máximo 200 caracteres"
+    )
+    
+    tipo = forms.CharField(
+        label="Tipo de Transporte",
+        required=True,
+        max_length=50,
+        help_text="Máximo 50 caracteres (Ej. Autobús, Avión, Tren)"
+    )
+    
+    capacidad = forms.IntegerField(
+        label="Capacidad",
+        required=True,
+        min_value=1,
+        help_text="Número de personas que puede transportar"
+    )
+    
+    precio_base = forms.DecimalField(
+        label="Precio Base",
+        required=True,
+        max_digits=10,
+        decimal_places=2,
+        help_text="Precio base del transporte"
+    )
+
+    fecha_disponibilidad = forms.DateField(
+        label="Fecha de Disponibilidad",
+        required=True,
+        widget=forms.DateInput(attrs={'type': 'date'}),
+        help_text="Fecha en que el transporte estará disponible"
+    )
+
+    descripcion = forms.CharField(
+        label="Descripción",
+        required=False,
+        widget=forms.Textarea(attrs={'rows': 3}),
+        help_text="Opcional: Descripción adicional del transporte"
+    )
+
+    # Obtener los destinos usando el helper
+    def __init__(self, *args, **kwargs):
+        super(TransporteForm, self).__init__(*args, **kwargs)
+        
+        # Llamamos al helper para obtener los destinos
+        destinosDisponibles = helper.obtener_destinos_select()
+        
+        # Creamos el campo de selección de destino
+        self.fields["destino"] = forms.ChoiceField(
+            choices=destinosDisponibles,
+            widget=forms.Select,
+            required=True,
+            label="Destino"
+        )
+    
 
 #######################################################################################################################################################################
 

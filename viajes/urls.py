@@ -21,6 +21,7 @@ urlpatterns = [
     
     path('reservas/crear', views.reserva_crear, name='reserva_crear'),
     path('usuarios/crear', views.usuario_crear, name='usuario_crear'),
+    path('transportes/crear', views.transporte_crear, name='transporte_crear'),
     
     path('reservas/editar/<int:reserva_id>/', views.reserva_editar, name='reserva_editar'),
     path('usuarios/editar/<int:usuario_id>/', views.usuario_editar, name='usuario_editar'),

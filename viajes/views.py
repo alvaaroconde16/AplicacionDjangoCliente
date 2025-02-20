@@ -450,6 +450,49 @@ def usuario_crear(request):
     return render(request, 'usuarios/create.html', {"formulario": formulario})
 
 
+def transporte_crear(request):
+    if request.method == "POST":
+        try:
+            formulario = TransporteForm(request.POST)  # Para incluir los datos del formulario
+            headers = crear_cabecera()  # Si es necesario añadir alguna cabecera
+            datos = formulario.data.copy()
+
+            # Realiza la solicitud POST al API
+            response = requests.post(
+                'http://0.0.0.0:8000/api/v1/transportes/crear',  # URL para crear transporte
+                headers=headers,
+                data=json.dumps(datos),  # Convertimos los datos del formulario a JSON
+                files=request.FILES  # Si hay archivos (como una imagen) se envían también
+            )
+
+            # Verifica si la respuesta fue exitosa
+            if response.status_code == requests.codes.ok:
+                return redirect("transportesMejorados_lista_api")  # Redirige a la lista de transportes
+            else:
+                print(response.status_code)
+                response.raise_for_status()
+
+        except HTTPError as http_err:
+            print(f'Hubo un error en la petición: {http_err}')
+            if response.status_code == 400:  # Si hay errores de validación
+                errores = response.json()
+                for error in errores:
+                    formulario.add_error(error, errores[error])
+
+                return render(request, 'transportes/create.html', {"formulario": formulario})
+            else:
+                return mi_error_500(request)  # Manejo de errores internos
+
+        except Exception as err:
+            print(f'Ocurrió un error: {err}')
+            return mi_error_500(request)
+
+    else:
+        formulario = TransporteForm()  # Si no es POST, muestra un formulario vacío
+
+    return render(request, 'transportes/create.html', {"formulario": formulario})
+
+
 #######################################################################################################################################################################
 
 

@@ -33,3 +33,19 @@ class helper:
         response = requests.get('http://0.0.0.0:8000/api/v1/usuarios/'+str(id), headers=headers)
         usuario = response.json()
         return usuario
+    
+    
+    # Helper para obtener destinos
+def obtener_destinos_select():
+    headers = {'Authorization': 'Bearer ' + env("OAUTH2_ACCESS_TOKEN")}
+    response = requests.get('http://0.0.0.0:8000/api/v1/destinos', headers=headers)
+    
+    if response.status_code == 200:
+        destinos = response.json()
+    else:
+        destinos = []  # En caso de error, devolvemos una lista vacía
+
+    lista_destinos = []
+    for destino in destinos:
+        lista_destinos.append((destino["id"], destino["nombre"]))  # Usamos el "id" como valor y el "nombre" como texto
+    return lista_destinos
