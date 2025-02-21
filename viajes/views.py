@@ -457,16 +457,20 @@ def transporte_crear(request):
             headers = crear_cabecera()  # Si es necesario añadir alguna cabecera
             datos = formulario.data.copy()
 
+
+            # Asegúrate de que el campo 'destino' sea una lista de valores seleccionados
+            datos["destino"] = request.POST.getlist("destino")  # Asignamos la lista de destinos al campo 'destino'
+
+
             # Realiza la solicitud POST al API
             response = requests.post(
                 'http://0.0.0.0:8000/api/v1/transportes/crear',  # URL para crear transporte
                 headers=headers,
                 data=json.dumps(datos),  # Convertimos los datos del formulario a JSON
-                files=request.FILES  # Si hay archivos (como una imagen) se envían también
             )
 
             # Verifica si la respuesta fue exitosa
-            if response.status_code == requests.codes.ok:
+            if response.status_code == 201:
                 return redirect("transportesMejorados_lista_api")  # Redirige a la lista de transportes
             else:
                 print(response.status_code)
@@ -477,8 +481,7 @@ def transporte_crear(request):
             if response.status_code == 400:  # Si hay errores de validación
                 errores = response.json()
                 for error in errores:
-                    formulario.add_error(error, errores[error])
-
+                    formulario.add_error(error,errores[error])
                 return render(request, 'transportes/create.html', {"formulario": formulario})
             else:
                 return mi_error_500(request)  # Manejo de errores internos

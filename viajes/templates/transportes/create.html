@@ -35,7 +35,7 @@
     </div>
 
     <div class="mb-4">
-        {% bootstrap_field formulario.precio_base show_label=True %}
+        {% bootstrap_field formulario.costo_por_persona show_label=True %}
         <div class="invalid-feedback">
             {% for error in formulario.precio.errors %}
                 {{ error }}
@@ -47,6 +47,15 @@
         {% bootstrap_field formulario.descripcion show_label=True %}
         <div class="invalid-feedback">
             {% for error in formulario.descripcion.errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="mb-4">
+        {% bootstrap_field formulario.destino show_label=True %}
+        <div class="invalid-feedback">
+            {% for error in formulario.destinos.errors %}
                 {{ error }}
             {% endfor %}
         </div>

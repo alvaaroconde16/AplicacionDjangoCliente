@@ -179,7 +179,7 @@ class TransporteForm(forms.Form):
         help_text="Número de personas que puede transportar"
     )
     
-    precio_base = forms.DecimalField(
+    costo_por_persona = forms.DecimalField(
         label="Precio Base",
         required=True,
         max_digits=10,
@@ -209,11 +209,11 @@ class TransporteForm(forms.Form):
         destinosDisponibles = helper.obtener_destinos_select()
         
         # Creamos el campo de selección de destino
-        self.fields["destino"] = forms.ChoiceField(
+        self.fields["destino"] = forms.MultipleChoiceField(
             choices=destinosDisponibles,
-            widget=forms.Select,
             required=True,
-            label="Destino"
+            label="Destino",
+            help_text="Usa la tecla Ctrl para seleccionar varios destinos"
         )
     
 
