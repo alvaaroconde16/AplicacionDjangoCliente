@@ -36,7 +36,7 @@ def crear_cabecera():
 
 # Definir una constante para la base de la URL de la API.
 # Esto permite cambiar la versión de la API en un solo lugar si es necesario en el futuro.
-API_BASE_URL = "http://0.0.0.0:8000/api/v1/"
+API_BASE_URL = "http://alvaroconde.pythonanywhere.com/api/v1/"
 
 # alvaroconde.pythonanywhere.com
 
@@ -375,7 +375,7 @@ def reserva_crear(request):
             datos["fecha_llegada"] = str(datetime.strptime(datos["fecha_llegada"], "%Y-%m-%d").date())
             
             response = requests.post(
-                'http://0.0.0.0:8000/api/v1/reservas/crear',
+                'http://alvaroconde.pythonanywhere.com/api/v1/reservas/crear',
                 headers=headers,
                 data=json.dumps(datos)
             )
@@ -421,7 +421,7 @@ def usuario_crear(request):
                 datos["fecha_registro"] = str(datetime.strptime(datos["fecha_registro"], "%Y-%m-%d").date())
             
             response = requests.post(
-                'http://0.0.0.0:8000/api/v1/usuarios/crear',  
+                'http://alvaroconde.pythonanywhere.com/api/v1/usuarios/crear',  
                 headers=headers,
                 data=json.dumps(datos),  # Convertimos los datos a JSON
                 files=request.FILES  # Enviamos los archivos (imagen de perfil)
@@ -469,7 +469,7 @@ def transporte_crear(request):
 
             # Realiza la solicitud POST al API
             response = requests.post(
-                'http://0.0.0.0:8000/api/v1/transportes/crear',  # URL para crear transporte
+                'http://alvaroconde.pythonanywhere.com/api/v1/transportes/crear',  # URL para crear transporte
                 headers=headers,
                 data=json.dumps(datos),  # Convertimos los datos del formulario a JSON
             )
@@ -514,7 +514,7 @@ def extra_crear(request):
 
             # Realiza la solicitud POST al API para crear el extra
             response = requests.post(
-                'http://0.0.0.0:8000/api/v1/extras/crear',  # URL para crear un nuevo extra
+                'http://alvaroconde.pythonanywhere.com/api/v1/extras/crear',  # URL para crear un nuevo extra
                 headers=headers,
                 data=json.dumps(datos),  # Convertimos los datos del formulario a JSON
             )

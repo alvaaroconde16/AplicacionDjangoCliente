@@ -43,7 +43,7 @@ class cliente_api:
     def realizar_peticion(self):
         try:
             self.respuesta = requests.put(
-                    ("http://0.0.0.0:8000/api/v1/")+self.url,
+                    ("http://alvaroconde.pythonanywhere.com/api/v1/")+self.url,
                     headers=self.headers,
                     data=self.datosEnvio
             )
