@@ -381,6 +381,7 @@ def reserva_crear(request):
             )
             
             if response.status_code == requests.codes.ok:
+                messages.success(request, "Reserva creada correctamente.")
                 return redirect("reservas_lista_api")
             else:
                 print(response.status_code)
@@ -427,6 +428,7 @@ def usuario_crear(request):
             )
 
             if response.status_code == requests.codes.ok:  
+                messages.success(request, "Usuario creado correctamente.")
                 return redirect("usuarios_lista_api")  
             else:
                 print(response.status_code)
@@ -474,6 +476,7 @@ def transporte_crear(request):
 
             # Verifica si la respuesta fue exitosa
             if response.status_code == 201:
+                messages.success(request, "Transporte creado correctamente.")
                 return redirect("transportesMejorados_lista_api")  # Redirige a la lista de transportes
             else:
                 print(response.status_code)
@@ -518,6 +521,7 @@ def extra_crear(request):
 
             # Verifica si la respuesta fue exitosa
             if response.status_code == 201:
+                messages.success(request, "Extra creado correctamente.")
                 return redirect("extrasMejorados_lista_api")  # Redirige a la lista de extras
             else:
                 print(response.status_code)
@@ -588,6 +592,7 @@ def reserva_editar(request, reserva_id):
         cliente.realizar_peticion_api()
 
         if cliente.es_respuesta_correcta():
+            messages.success(request, "Reserva editada correctamente.")
             return redirect("reservas_lista_api")
         elif cliente.es_error_validacion_datos():
             cliente.incluir_errores_formulario(formulario)
@@ -636,6 +641,7 @@ def usuario_editar(request, usuario_id):
         cliente.realizar_peticion_api()
 
         if cliente.es_respuesta_correcta():
+            messages.success(request, "Usuario editado correctamente.")
             return redirect("usuarios_lista_api")
         elif cliente.es_error_validacion_datos():
             cliente.incluir_errores_formulario(formulario)
@@ -678,6 +684,7 @@ def transporte_editar(request, transporte_id):
         cliente.realizar_peticion_api()
 
         if cliente.es_respuesta_correcta():
+            messages.success(request, "Transporte editado correctamente.")
             return redirect("transportesMejorados_lista_api")
         elif cliente.es_error_validacion_datos():
             cliente.incluir_errores_formulario(formulario)
@@ -722,6 +729,7 @@ def extra_editar(request, extra_id):
 
         # Verificamos la respuesta de la API
         if cliente.es_respuesta_correcta():
+            messages.success(request, "Extra editado correctamente.")
             return redirect("extrasMejorados_lista_api")
         elif cliente.es_error_validacion_datos():
             cliente.incluir_errores_formulario(formulario)
@@ -758,6 +766,7 @@ def reserva_actualizar_codigo(request, reserva_id):
             )
 
             if response.status_code == requests.codes.ok:
+                messages.success(request, "Codigo de reserva actualizado correctamente.")
                 return redirect("reservas_lista_api")  # Redirige a la vista de mostrar la reserva
             else:
                 print(response.status_code)
@@ -805,6 +814,7 @@ def usuario_actualizar_nombre(request, usuario_id):
             )
 
             if response.status_code == requests.codes.ok:  # Si la respuesta es exitosa
+                messages.success(request, "Nombre de usuario actualizado correctamente.")
                 return redirect("usuarios_lista_api")  # Redirige a la vista de la lista de usuarios
             else:
                 print(response.status_code)
@@ -852,6 +862,7 @@ def transporte_actualizar_capacidad(request, transporte_id):
             )
 
             if response.status_code == requests.codes.ok:  # Si la respuesta es exitosa
+                messages.success(request, "Capacidad de transporte actualizado correctamente.")
                 return redirect("transportes_lista_api")  # Redirige a la vista de la lista de transportes
             else:
                 print(response.status_code)
@@ -900,6 +911,7 @@ def extra_actualizar_nombre(request, extra_id):
             )
 
             if response.status_code == requests.codes.ok:  # Si la respuesta es exitosa
+                messages.success(request, "Nombre de extra actualizado correctamente.")
                 return redirect("extrasMejorados_lista_api")  # Redirige a la vista de la lista de extras
             else:
                 print(response.status_code)
@@ -935,6 +947,7 @@ def reserva_eliminar(request, reserva_id):
             headers=headers,
         )
         if response.status_code == requests.codes.ok:
+            messages.success(request, "Reserva eliminada correctamente.")
             return redirect("reservas_lista_api")
         else:
             print(response.status_code)
@@ -954,6 +967,7 @@ def usuario_eliminar(request, usuario_id):
             headers=headers,
         )
         if response.status_code == requests.codes.ok:
+            messages.success(request, "Usuario eliminado correctamente.")
             return redirect("usuarios_lista_api")
         else:
             print(response.status_code)
@@ -973,6 +987,7 @@ def transporte_eliminar(request, transporte_id):
             headers=headers,
         )
         if response.status_code == requests.codes.ok:
+            messages.success(request, "Transporte eliminado correctamente.")
             return redirect("transportesMejorados_lista_api")
         else:
             print(response.status_code)
@@ -992,6 +1007,7 @@ def extra_eliminar(request, extra_id):
             headers=headers,
         )
         if response.status_code == requests.codes.ok:
+            messages.success(request, "Extra eliminado correctamente.")
             return redirect("extrasMejorados_lista_api")
         else:
             print(response.status_code)
