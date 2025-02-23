@@ -427,7 +427,16 @@ def usuario_crear(request):
                 files=request.FILES  # Enviamos los archivos (imagen de perfil)
             )
 
-            if response.status_code == requests.codes.ok:  
+            if response.status_code == requests.codes.ok:
+                usuario_creado = response.json()  # Obtenemos la respuesta del usuario creado
+
+                # Verificamos si la API nos devuelve la imagen
+                imagen_url = usuario_creado.get("imagen")
+                if imagen_url and not imagen_url.startswith("http"):
+                    imagen_url = f"https://alvaroconde.pythonanywhere.com/media/{imagen_url}"
+
+                usuario_creado["imagen"] = imagen_url  # Guardamos la URL correcta
+
                 messages.success(request, "Usuario creado correctamente.")
                 return redirect("usuarios_lista_api")  
             else:
@@ -622,7 +631,7 @@ def usuario_editar(request, usuario_id):
             'telefono': usuario['telefono'],
             'edad': usuario['edad'],
             'contraseña': usuario['contraseña'],  # No es recomendable cargar contraseñas, podrías omitirlo
-            'fecha_registro': datetime.strptime(usuario['fecha_registro'], '%Y-%m-%d').date(),
+            'imagen': usuario['imagen']
         }
     )
     

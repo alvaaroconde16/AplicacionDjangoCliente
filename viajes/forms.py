@@ -155,6 +155,12 @@ class UsuarioForm(forms.Form):
         widget=forms.DateInput(attrs={'type': 'date'}),
         required=False
     )
+
+    imagen = forms.ImageField(
+        label="Imagen de Perfil",
+        required=False,
+        help_text="Sube una imagen de perfil"
+    )
     
     
 class TransporteForm(forms.Form):
