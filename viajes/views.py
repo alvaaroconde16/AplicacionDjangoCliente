@@ -67,13 +67,11 @@ def reservas_lista_api(request):
     return render(request, 'reservas/reserva_api.html', {'reservas_mostrar':reservas})
         
 
-
 def usuarios_lista_api(request):
     headers = {'Authorization': 'Bearer ' + env('OAUTH2_ACCESS_TOKEN_PROVEEDOR')} 
     response = requests.get(API_BASE_URL + 'usuarios', headers=headers)
     usuarios = response.json()
     return render(request, 'usuarios/usuario_api.html', {'usuarios_mostrar': usuarios})
-
 
 
 def reservasMejoradas_lista_api(request):
@@ -83,7 +81,6 @@ def reservasMejoradas_lista_api(request):
     return render(request, 'reservas/reservaMejorada_api.html', {'reservas_mostrar': reservas})
 
 
-
 def alojamientosMejorados_lista_api(request):
     headers = {'Authorization': 'Bearer ' + env('OAUTH2_ACCESS_TOKEN_ADMIN')} 
     response = requests.get(API_BASE_URL + 'alojamientosMejorados', headers=headers)
@@ -91,12 +88,18 @@ def alojamientosMejorados_lista_api(request):
     return render(request, 'alojamientos/alojamientoMejorado_api.html', {'alojamientos_mostrar': alojamientos})
 
 
-
 def transportesMejorados_lista_api(request):
     headers = {'Authorization': 'Bearer ' + env('OAUTH2_ACCESS_TOKEN_CLIENTE')} 
     response = requests.get(API_BASE_URL + 'transportesMejorados', headers=headers)
     transportes = response.json()
     return render(request, 'transportes/transporteMejorado_api.html', {'transportes_mostrar': transportes})
+
+
+def extrasMejorados_lista_api(request):
+    headers = {'Authorization': 'Bearer ' + env('OAUTH2_ACCESS_TOKEN_ADMIN')}
+    response = requests.get(API_BASE_URL + 'extrasMejorados', headers=headers)
+    extras = response.json()
+    return render(request, 'extras/extraMejorado_api.html', {'extras_mostrar': extras})
 
 
 #######################################################################################################################################################################
@@ -496,6 +499,51 @@ def transporte_crear(request):
     return render(request, 'transportes/create.html', {"formulario": formulario})
 
 
+def extra_crear(request):
+    if request.method == "POST":
+        try:
+            formulario = ExtraForm(request.POST)  # Crea una instancia del formulario con los datos POST
+            headers = crear_cabecera()  # Función para agregar las cabeceras necesarias, si las tienes
+            datos = formulario.data.copy()
+
+            # Asegúrate de que el campo 'reserva' sea una lista de valores seleccionados
+            datos["reserva"] = request.POST.getlist("reserva")  # Asignamos la lista de reservas al campo 'reserva'
+
+            # Realiza la solicitud POST al API para crear el extra
+            response = requests.post(
+                'http://0.0.0.0:8000/api/v1/extras/crear',  # URL para crear un nuevo extra
+                headers=headers,
+                data=json.dumps(datos),  # Convertimos los datos del formulario a JSON
+            )
+
+            # Verifica si la respuesta fue exitosa
+            if response.status_code == 201:
+                return redirect("extrasMejorados_lista_api")  # Redirige a la lista de extras
+            else:
+                print(response.status_code)
+                response.raise_for_status()
+
+        except HTTPError as http_err:
+            print(f'Hubo un error en la petición: {http_err}')
+            if response.status_code == 400:  # Si hay errores de validación
+                errores = response.json()  # Obtener los errores de la respuesta
+                for error in errores:
+                    formulario.add_error(error, errores[error])  # Añadimos los errores al formulario
+                return render(request, 'extras/create.html', {"formulario": formulario})  # Vuelve a mostrar el formulario con errores
+            else:
+                return mi_error_500(request)  # Manejo de errores internos
+
+        except Exception as err:
+            print(f'Ocurrió un error: {err}')
+            return mi_error_500(request)  # Redirige a un error general
+
+    else:
+        formulario = ExtraForm()  # Si no es POST, muestra un formulario vacío
+
+    return render(request, 'extras/create.html', {"formulario": formulario})  # Muestra el formulario
+
+
+
 #######################################################################################################################################################################
 
 
@@ -584,9 +632,7 @@ def usuario_editar(request, usuario_id):
             datos["fecha_registro"] = None
 
         # Hacer la petición API para actualizar usuario
-        cliente = cliente_api(
-            os.getenv("OAUTH2_ACCESS_TOKEN"), "PUT", f'usuarios/editar/{usuario_id}', datos
-        )
+        cliente = cliente_api(os.getenv("OAUTH2_ACCESS_TOKEN"), "PUT", f'usuarios/editar/{usuario_id}', datos)
         cliente.realizar_peticion_api()
 
         if cliente.es_respuesta_correcta():
@@ -597,6 +643,94 @@ def usuario_editar(request, usuario_id):
             return tratar_errores(request, cliente.codigoRespuesta)
     
     return render(request, 'usuarios/actualizar.html', {"formulario": formulario, "usuario": usuario})
+
+
+def transporte_editar(request, transporte_id):
+    datosFormulario = None
+
+    # Si el método es POST, obtenemos los datos del formulario
+    if request.method == "POST":
+        datosFormulario = request.POST
+
+    # Obtener los datos del transporte desde el helper
+    transporte = helper.obtener_transporte(transporte_id)
+
+    # Crear un formulario con los datos iniciales
+    formulario = TransporteForm(
+        datosFormulario,
+        initial={
+            'tipo': transporte['tipo'],
+            'capacidad': transporte['capacidad'],
+            'disponible': transporte['disponible'],
+            'costo_por_persona': transporte['costo_por_persona'],
+            'destino': transporte['destino'],  # Asegurar que se pasa correctamente
+        }
+    )
+
+    # Si el formulario es enviado con método POST y es válido
+    if request.method == "POST" and formulario.is_valid():
+        datos = formulario.cleaned_data.copy()
+
+        # Asegurar que los destinos se envíen como lista de IDs
+        datos["destino"] = request.POST.getlist("destino")
+
+        cliente = cliente_api(env("OAUTH2_ACCESS_TOKEN"), "PUT", f'transportes/editar/{transporte_id}', datos)
+        cliente.realizar_peticion_api()
+
+        if cliente.es_respuesta_correcta():
+            return redirect("transportesMejorados_lista_api")
+        elif cliente.es_error_validacion_datos():
+            cliente.incluir_errores_formulario(formulario)
+        else:
+            return tratar_errores(request, cliente.codigoRespuesta)
+
+    return render(request, 'transportes/actualizar.html', {"formulario": formulario, "transporte": transporte})
+
+
+def extra_editar(request, extra_id):
+    datosFormulario = None
+
+    # Si el método es POST, obtenemos los datos del formulario
+    if request.method == "POST":
+        datosFormulario = request.POST
+
+    # Obtener los datos del extra desde el helper o API
+    extra = helper.obtener_extra(extra_id)
+
+    # Crear un formulario con los datos iniciales del Extra
+    formulario = ExtraForm(
+        datosFormulario,
+        initial={
+            'nombre': extra['nombre'],
+            'tipo': extra['tipo'],
+            'descripcion': extra['descripcion'],
+            'precio': extra['precio'],
+            'reserva': extra['reserva'],  # Asegúrate que los datos de 'reserva' están bien
+        }
+    )
+
+    # Si el formulario es enviado con método POST y es válido
+    if request.method == "POST" and formulario.is_valid():
+        datos = formulario.cleaned_data.copy()
+
+        # Asegurar que las reservas se envíen como lista de IDs
+        datos["reserva"] = request.POST.getlist("reserva")
+
+        # Llamamos a la API para editar el extra
+        cliente = cliente_api(env("OAUTH2_ACCESS_TOKEN"), "PUT", f'extras/editar/{extra_id}', datos)
+        cliente.realizar_peticion_api()
+
+        # Verificamos la respuesta de la API
+        if cliente.es_respuesta_correcta():
+            return redirect("extrasMejorados_lista_api")
+        elif cliente.es_error_validacion_datos():
+            cliente.incluir_errores_formulario(formulario)
+        else:
+            return tratar_errores(request, cliente.codigoRespuesta)
+
+    return render(request, 'extras/actualizar.html', {"formulario": formulario, "extra": extra})
+
+
 
 
 #######################################################################################################################################################################
@@ -646,6 +780,7 @@ def reserva_actualizar_codigo(request, reserva_id):
     return render(request, 'reservas/actualizar_codigo.html', {"formulario": formulario, "reserva": reserva})
 
 
+
 def usuario_actualizar_nombre(request, usuario_id):
     datosFormulario = None
     usuario = helper.obtener_usuario(usuario_id)  # Obtenemos los datos del usuario
@@ -692,6 +827,103 @@ def usuario_actualizar_nombre(request, usuario_id):
     return render(request, 'usuarios/actualizar_nombre.html', {"formulario": formulario, "usuario": usuario})
 
 
+
+def transporte_actualizar_capacidad(request, transporte_id):
+    datosFormulario = None
+    transporte = helper.obtener_transporte(transporte_id)  # Obtenemos los datos del transporte
+
+    formulario = TransporteActualizarCapacidadForm(datosFormulario,
+            initial={
+                'capacidad': transporte['capacidad'],  # Solo el campo 'capacidad' será editable
+            }
+    )
+
+    if request.method == "POST":
+        try:
+            formulario = TransporteActualizarCapacidadForm(request.POST)  # Volvemos a instanciar el formulario con los datos POST
+            headers = crear_cabecera()  # Función que genera las cabeceras necesarias (token de autenticación, etc.)
+            datos = request.POST.copy()  # Copiamos los datos del formulario
+
+            # Realizamos el PATCH a la API para actualizar la capacidad del transporte
+            response = requests.patch(
+                API_BASE_URL + "transportes/actualizar/capacidad/" + str(transporte_id),  # Endpoint para actualizar la capacidad del transporte
+                headers=headers,
+                data=json.dumps(datos)  # Enviamos los datos como JSON
+            )
+
+            if response.status_code == requests.codes.ok:  # Si la respuesta es exitosa
+                return redirect("transportes_lista_api")  # Redirige a la vista de la lista de transportes
+            else:
+                print(response.status_code)
+                response.raise_for_status()
+
+        except HTTPError as http_err:
+            print(f'Hubo un error en la petición: {http_err}')
+            if response.status_code == 400:  # Si hay un error de validación
+                errores = response.json()
+                for error in errores:
+                    formulario.add_error(error, errores[error])  # Añadimos los errores al formulario
+                return render(request, 'transportes/actualizar_capacidad.html', {"formulario": formulario, "transporte": transporte})
+            else:
+                return mi_error_500(request)  # Manejo de errores internos
+
+        except Exception as err:
+            print(f'Ocurrió un error: {err}')
+            return mi_error_500(request)  # Manejo general de errores
+
+    return render(request, 'transportes/actualizar_capacidad.html', {"formulario": formulario, "transporte": transporte})
+
+
+
+def extra_actualizar_nombre(request, extra_id):
+    datosFormulario = None
+    extra = helper.obtener_extra(extra_id)  # Obtenemos los datos del extra
+
+    # Creamos el formulario con los datos iniciales, solo permitimos actualizar el campo 'nombre'
+    formulario = ExtraActualizarNombreForm(datosFormulario,
+            initial={
+                'nombre': extra['nombre'],  # Solo el campo 'nombre' será editable
+            }
+    )
+
+    if request.method == "POST":
+        try:
+            formulario = ExtraActualizarNombreForm(request.POST)  # Volvemos a instanciar el formulario con los datos POST
+            headers = crear_cabecera()  # Función que genera las cabeceras necesarias (token de autenticación, etc.)
+            datos = request.POST.copy()  # Copiamos los datos del formulario
+
+            # Realizamos el PATCH a la API para actualizar el nombre del extra
+            response = requests.patch(
+                API_BASE_URL + "extras/actualizar/nombre/" + str(extra_id),  # Endpoint para actualizar el nombre del extra
+                headers=headers,
+                data=json.dumps(datos)  # Enviamos los datos como JSON
+            )
+
+            if response.status_code == requests.codes.ok:  # Si la respuesta es exitosa
+                return redirect("extrasMejorados_lista_api")  # Redirige a la vista de la lista de extras
+            else:
+                print(response.status_code)
+                response.raise_for_status()
+
+        except HTTPError as http_err:
+            print(f'Hubo un error en la petición: {http_err}')
+            if response.status_code == 400:  # Si hay un error de validación
+                errores = response.json()
+                for error in errores:
+                    formulario.add_error(error, errores[error])  # Añadimos los errores al formulario
+                return render(request, 'extras/actualizar_nombre.html', {"formulario": formulario, "extra": extra})
+            else:
+                return mi_error_500(request)  # Manejo de errores internos
+
+        except Exception as err:
+            print(f'Ocurrió un error: {err}')
+            return mi_error_500(request)  # Manejo general de errores
+
+    return render(request, 'extras/actualizar_nombre.html', {"formulario": formulario, "extra": extra})
+
+
+
+
 #######################################################################################################################################################################
 
 
@@ -731,6 +963,44 @@ def usuario_eliminar(request, usuario_id):
         return mi_error_500(request)
     
     return redirect("usuarios_lista_api")
+
+
+def transporte_eliminar(request, transporte_id):
+    try:
+        headers = crear_cabecera()
+        response = requests.delete(
+            API_BASE_URL + "transportes/eliminar/" + str(transporte_id),
+            headers=headers,
+        )
+        if response.status_code == requests.codes.ok:
+            return redirect("transportesMejorados_lista_api")
+        else:
+            print(response.status_code)
+            response.raise_for_status()
+    except Exception as err:
+        print(f'Ocurrió un error: {err}')
+        return mi_error_500(request)
+    
+    return redirect("transportesMejorados_lista_api")
+
+
+def extra_eliminar(request, extra_id):
+    try:
+        headers = crear_cabecera()
+        response = requests.delete(
+            API_BASE_URL + "extras/eliminar/" + str(extra_id),
+            headers=headers,
+        )
+        if response.status_code == requests.codes.ok:
+            return redirect("extrasMejorados_lista_api")
+        else:
+            print(response.status_code)
+            response.raise_for_status()
+    except Exception as err:
+        print(f'Ocurrió un error: {err}')
+        return mi_error_500(request)
+    
+    return redirect("extrasMejorados_lista_api")
 
 
 #######################################################################################################################################################################

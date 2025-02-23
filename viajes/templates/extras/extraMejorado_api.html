@@ -1,0 +1,49 @@
+{% extends "principal.html" %}
+{% block contenido %}
+
+  <h1 class="display-3">Lista de Extras</h1>
+
+  <div class="row">
+    {% for extra in extras_mostrar %}
+      <div class="col-sm-4 mb-2">
+        <div class="card">
+          <div class="card-body">
+            <h2>Nombre del Extra: {{ extra.nombre }}</h2>
+            <p>Tipo: {{ extra.tipo }}</p>
+            <p>Descripción: {{ extra.descripcion }}</p>
+            <p>Precio: €{{ extra.precio }}</p>
+
+            <h5 class="mt-4">Reservas Asociadas:</h5>
+            <ul>
+              {% for reserva in extra.reserva %}
+                <li>Código de Reserva: {{ reserva.codigo_reserva }} (Fecha de Salida: {{ reserva.fecha_salida }})</li>
+              {% endfor %}
+            </ul>
+            <!-- Botón para actualizar -->
+            <a href="{% url 'extra_editar' extra.id %}" class="btn btn-primary mb-1">Actualizar Extra</a>
+
+            <!-- Botón para actualizar nombre -->
+            <a href="{% url 'extra_actualizar_nombre' extra.id %}" class="btn btn-warning mb-1">Actualizar Nombre</a>
+
+            <!-- Formulario para eliminar extra -->
+            <form action="{% url 'extra_eliminar' extra.id %}" method="POST">
+              {% csrf_token %}
+              <button class="btn btn-danger" type="submit" onclick="return confirmarEliminacion();">
+                  Eliminar
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <p>No hay extras disponibles.</p>
+    {% endfor %}
+  </div>
+
+  <script type="text/javascript">
+    function confirmarEliminacion() {
+        return confirm("¿Estás seguro de que deseas eliminar este extra? Esta acción no se puede deshacer.");
+    }
+</script>
+
+{% endblock %}

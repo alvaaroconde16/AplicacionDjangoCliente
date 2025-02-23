@@ -1,11 +1,20 @@
 {% extends "principal.html" %}
 
 {% block contenido %}
-<h1>Formulario de Transporte</h1>
+<h1>Editar Extra</h1>
 
-<form action="{% url 'transporte_crear' %}" method="post" enctype="multipart/form-data">
+<form action="{% url 'extra_editar' extra.id %}" method="post">
     {% load django_bootstrap5 %}
     {% csrf_token %}
+    
+    <div class="mb-4">
+        {% bootstrap_field formulario.nombre show_label=True %}
+        <div class="invalid-feedback">
+            {% for error in formulario.nombre.errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+    </div>
 
     <div class="mb-4">
         {% bootstrap_field formulario.tipo show_label=True %}
@@ -17,25 +26,16 @@
     </div>
 
     <div class="mb-4">
-        {% bootstrap_field formulario.capacidad show_label=True %}
+        {% bootstrap_field formulario.descripcion show_label=True %}
         <div class="invalid-feedback">
-            {% for error in formulario.capacidad.errors %}
+            {% for error in formulario.descripcion.errors %}
                 {{ error }}
             {% endfor %}
         </div>
     </div>
 
     <div class="mb-4">
-        {% bootstrap_field formulario.disponible show_label=True %}
-        <div class="invalid-feedback">
-            {% for error in formulario.disponible.errors %}
-                {{ error }}
-            {% endfor %}
-        </div>
-    </div>
-
-    <div class="mb-4">
-        {% bootstrap_field formulario.costo_por_persona show_label=True %}
+        {% bootstrap_field formulario.precio show_label=True %}
         <div class="invalid-feedback">
             {% for error in formulario.precio.errors %}
                 {{ error }}
@@ -44,15 +44,14 @@
     </div>
 
     <div class="mb-4">
-        {% bootstrap_field formulario.destino show_label=True %}
+        {% bootstrap_field formulario.reserva show_label=True %}
         <div class="invalid-feedback">
-            {% for error in formulario.destinos.errors %}
+            {% for error in formulario.reserva.errors %}
                 {{ error }}
             {% endfor %}
         </div>
     </div>
 
-    <button type="submit" class="btn btn-primary">Enviar</button>
+    <button type="submit" class="btn btn-primary">Actualizar Extra</button>
 </form>
-
 {% endblock %}

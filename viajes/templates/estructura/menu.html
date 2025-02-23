@@ -110,6 +110,18 @@
                     </ul>
                 </li>
 
+
+                <!-- Menú de Extras con sublistas -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUsuarios" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Extras
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownUsuarios">
+                        <li><a class="dropdown-item" href="{% url 'extrasMejorados_lista_api' %}">Lista de extras Mejorados</a></li>
+                        <li><a class="dropdown-item" href="{% url 'extra_crear' %}">Crear extra</a></li>
+                    </ul>
+                </li>
+
             </ul>
         </div>
     </div>

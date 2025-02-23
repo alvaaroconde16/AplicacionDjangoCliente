@@ -158,13 +158,6 @@ class UsuarioForm(forms.Form):
     
     
 class TransporteForm(forms.Form):
-    nombre = forms.CharField(
-        label="Nombre del Transporte",
-        required=True,
-        max_length=200,
-        help_text="Máximo 200 caracteres"
-    )
-    
     tipo = forms.CharField(
         label="Tipo de Transporte",
         required=True,
@@ -178,27 +171,17 @@ class TransporteForm(forms.Form):
         min_value=1,
         help_text="Número de personas que puede transportar"
     )
+
+    disponible = forms.BooleanField(
+        label="Disponible",
+        required=False,
+        help_text="Indica si el transporte está disponible"
+    )
     
-    costo_por_persona = forms.DecimalField(
+    costo_por_persona = forms.FloatField(
         label="Precio Base",
         required=True,
-        max_digits=10,
-        decimal_places=2,
         help_text="Precio base del transporte"
-    )
-
-    fecha_disponibilidad = forms.DateField(
-        label="Fecha de Disponibilidad",
-        required=True,
-        widget=forms.DateInput(attrs={'type': 'date'}),
-        help_text="Fecha en que el transporte estará disponible"
-    )
-
-    descripcion = forms.CharField(
-        label="Descripción",
-        required=False,
-        widget=forms.Textarea(attrs={'rows': 3}),
-        help_text="Opcional: Descripción adicional del transporte"
     )
 
     # Obtener los destinos usando el helper
@@ -214,6 +197,51 @@ class TransporteForm(forms.Form):
             required=True,
             label="Destino",
             help_text="Usa la tecla Ctrl para seleccionar varios destinos"
+        )
+
+
+class ExtraForm(forms.Form):
+    nombre = forms.CharField(
+        label="Nombre del Extra",
+        required=True,
+        max_length=100,
+        help_text="Máximo 100 caracteres"
+    )
+    
+    tipo = forms.ChoiceField(
+        label="Tipo de Extra",
+        required=True,
+        choices=helper.obtener_tipos_extra(),
+        help_text="Selecciona el tipo de extra (Ej. Actividad, Guía, Transporte, etc.)"
+    )
+
+    descripcion = forms.CharField(
+        label="Descripción",
+        required=False,
+        widget=forms.Textarea,
+        help_text="Descripción del extra"
+    )
+
+    precio = forms.FloatField(
+        label="Precio",
+        required=True,
+        min_value=0,
+        help_text="Precio del extra"
+    )
+
+    # Obtener las reservas usando el helper (asumiendo que tienes un método similar para obtener reservas)
+    def __init__(self, *args, **kwargs):
+        super(ExtraForm, self).__init__(*args, **kwargs)
+
+        # Llamamos al helper para obtener las reservas
+        reservasDisponibles = helper.obtener_reservas_select()
+
+        # Creamos el campo de selección de reservas
+        self.fields["reserva"] = forms.MultipleChoiceField(
+            choices=reservasDisponibles,
+            required=True,
+            label="Reservas Asociadas",
+            help_text="Usa la tecla Ctrl para seleccionar varias reservas"
         )
     
 
@@ -235,4 +263,22 @@ class UsuarioActualizarNombreForm(forms.Form):
         required=True,
         max_length=200,
         help_text="Ingrese el nombre completo"
+    )
+
+
+class TransporteActualizarCapacidadForm(forms.Form):
+    capacidad = forms.IntegerField(
+        label="Capacidad",
+        required=True,
+        min_value=1,
+        help_text="Número de personas que puede transportar"
+    )
+
+
+class ExtraActualizarNombreForm(forms.Form):
+    nombre = forms.CharField(
+        label="Nombre del Extra",
+        required=True,
+        max_length=100,
+        help_text="Máximo 100 caracteres"
     )

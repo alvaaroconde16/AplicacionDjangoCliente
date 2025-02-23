@@ -1,0 +1,21 @@
+{% extends "principal.html" %}
+
+{% block contenido %}
+<h1>Editar Nombre del Extra</h1>
+
+<form action="{% url 'extra_actualizar_nombre' extra.id %}" method="post">
+    {% load django_bootstrap5 %}
+    {% csrf_token %}
+    
+    <div class="mb-4">
+        {% bootstrap_field formulario.nombre show_label=True %}
+        <div class="invalid-feedback">
+            {% for error in formulario.nombre.errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Actualizar Nombre</button>
+</form>
+{% endblock %}

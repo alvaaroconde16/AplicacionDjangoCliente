@@ -17,6 +17,20 @@
                 <p><strong>{{ dest.nombre }}</strong> - {{ dest.pais }}</p>
               {% endfor %}
             </div>
+
+            <!-- Botón para actualizar -->
+            <a href="{% url 'transporte_editar' transporte.id %}" class="btn btn-primary mb-1">Actualizar Transporte</a>
+
+            <!-- Botón para actualizar nombre -->
+            <a href="{% url 'transporte_actualizar_capacidad' transporte.id %}" class="btn btn-warning mb-1">Actualizar Capacidad</a>
+
+            <!-- Formulario para eliminar transporte -->
+            <form action="{% url 'transporte_eliminar' transporte.id %}" method="POST">
+                {% csrf_token %}
+                <button class="btn btn-danger" type="submit" onclick="return confirmarEliminacion();">
+                    Eliminar
+                </button>
+            </form>
           </div>
         </div>
       </div>
@@ -24,5 +38,11 @@
       <p>No hay transportes disponibles.</p>
     {% endfor %}
   </div>
+
+<script type="text/javascript">
+  function confirmarEliminacion() {
+      return confirm("¿Estás seguro de que deseas eliminar este transporte? Esta acción no se puede deshacer.");
+  }
+</script>
 
 {% endblock %}

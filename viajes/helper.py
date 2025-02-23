@@ -45,3 +45,41 @@ class helper:
         for destino in destinos:
             lista_destinos.append((destino["id"], destino["nombre"]))  # Usamos el "id" como valor y el "nombre" como texto
         return lista_destinos
+    
+
+    def obtener_transporte(id):
+        headers = {'Authorization': 'Bearer '+env("OAUTH2_ACCESS_TOKEN")} 
+        response = requests.get('http://0.0.0.0:8000/api/v1/transportes/'+str(id), headers=headers)
+        transporte = response.json()
+        return transporte
+
+
+    def obtener_tipos_extra():
+        # Lista fija de tipos de extra (esto lo puedes personalizar si es necesario)
+        tipos_extra = [
+            ('actividad', 'Actividad'),
+            ('guia', 'Guía Turístico'),
+            ('transporte', 'Transporte Adicional'),
+            ('comida', 'Comida Especial'),
+            ('seguro', 'Seguro'),
+        ]
+        return tipos_extra
+    
+
+    def obtener_reservas_select():
+        headers = {'Authorization': 'Bearer ' + env("OAUTH2_ACCESS_TOKEN")}
+        response = requests.get('http://0.0.0.0:8000/api/v1/reservas', headers=headers)
+        reservas = response.json()
+
+        lista_reservas = []
+        for reserva in reservas:
+            lista_reservas.append((reserva["id"], reserva["codigo_reserva"]))  # Usamos el "id" como valor y el "codigo_reserva" como texto
+        return lista_reservas
+    
+
+    def obtener_extra(id):
+        headers = {'Authorization': 'Bearer '+env("OAUTH2_ACCESS_TOKEN")} 
+        response = requests.get('http://0.0.0.0:8000/api/v1/extras/'+str(id), headers=headers)
+        extra = response.json()
+        return extra
+
