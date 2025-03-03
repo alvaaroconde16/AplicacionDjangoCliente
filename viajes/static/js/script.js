@@ -2,10 +2,10 @@
 console.log("La página se ha cargado correctamente")
 
 // Realizar la solicitud GET automáticamente cuando la página se carga
-fetch("http://0.0.0.0:8000/api/v1/reservas", {
+fetch("http://alvaroconde.pythonanywhere.com/api/v1/reservas", {
     method: "GET",
     headers: {
-        "Authorization": "Bearer 1xxfXixpxqxAiiYPpHYtGt1FRGsZ0L",  // Usa tu token aquí
+        "Authorization": "Bearer OEtv4JoFAXqxjWsxZMYX041mY4ib5a",  // Usa tu token aquí
         "Content-Type": "application/json"
     }
 })
