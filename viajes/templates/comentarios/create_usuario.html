@@ -1,0 +1,36 @@
+{% extends "principal.html" %}
+{% block contenido %}
+
+<h1 class="display-3">Crear Comentario</h1>
+
+<form method="POST" action="{% url 'comentario_crear_usuario' %}">
+    {% csrf_token %}
+
+    <div class="mb-3">
+        <label for="titulo" class="form-label">Título del Comentario</label>
+        <input type="text" class="form-control {% if formulario.titulo.errors %}is-invalid{% endif %}" id="titulo" name="titulo" value="{{ formulario.titulo.value|default_if_none:'' }}" required>
+        {% for error in formulario.titulo.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="mb-3">
+        <label for="contenido" class="form-label">Contenido del Comentario</label>
+        <textarea class="form-control {% if formulario.contenido.errors %}is-invalid{% endif %}" id="contenido" name="contenido" rows="4" required>{{ formulario.contenido.value|default_if_none:'' }}</textarea>
+        {% for error in formulario.contenido.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="mb-3">
+        <label for="calificacion" class="form-label">Calificación</label>
+        <input type="number" class="form-control {% if formulario.calificacion.errors %}is-invalid{% endif %}" id="calificacion" name="calificacion" min="0" max="5" step="0.1" value="{{ formulario.calificacion.value|default_if_none:'' }}" required>
+        {% for error in formulario.calificacion.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Crear Comentario</button>
+</form>
+
+{% endblock %}

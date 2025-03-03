@@ -33,6 +33,7 @@
                 {% endif %}
 
                 <!-- Menús desplegables -->
+                {% if request.session.token and request.session.usuario.rol == 1 or request.session.usuario.rol == 3 %}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUsuarios" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Usuarios
@@ -40,31 +41,51 @@
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{% url 'usuarios_lista_api' %}">Lista de usuarios</a></li>
                         <li><a class="dropdown-item" href="{% url 'usuario_busqueda_avanzada' %}">Buscar usuarios Avanzado</a></li>
-                        <li><a class="dropdown-item" href="{% url 'usuario_crear' %}">Crear usuario</a></li>
+
+                        {% if request.session.token and request.session.usuario.rol == 1 %}
+                            <li><a class="dropdown-item" href="{% url 'usuario_crear' %}">Crear usuario</a></li>
+                        {% endif %}    
                     </ul>
                 </li>
+                {% endif %}
 
+
+                {% if request.session.token %}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownReservas" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Reservas
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{% url 'reservas_lista_api' %}">Lista de reservas</a></li>
-                        <li><a class="dropdown-item" href="{% url 'reservasMejoradas_lista_api' %}">Lista de reservas Mejoradas</a></li>
-                        <li><a class="dropdown-item" href="{% url 'reserva_busqueda_simple' %}">Buscar reservas</a></li>
-                        <li><a class="dropdown-item" href="{% url 'reserva_busqueda_avanzada' %}">Buscar reservas Avanzado</a></li>
-                        <li><a class="dropdown-item" href="{% url 'reserva_crear' %}">Crear reserva</a></li>
+                        {% if request.session.token and request.session.usuario.rol == 1 or request.session.usuario.rol == 3 %}
+                            <li><a class="dropdown-item" href="{% url 'reservas_lista_api' %}">Lista de reservas</a></li>
+                            <li><a class="dropdown-item" href="{% url 'reservasMejoradas_lista_api' %}">Lista de reservas Mejoradas</a></li>
+                            <li><a class="dropdown-item" href="{% url 'reserva_busqueda_simple' %}">Buscar reservas</a></li>
+                            <li><a class="dropdown-item" href="{% url 'reserva_busqueda_avanzada' %}">Buscar reservas Avanzado</a></li>
+                        {% endif %}
+
+                        {% if request.session.token and request.session.usuario.rol == 1 %}
+                            <li><a class="dropdown-item" href="{% url 'reserva_crear' %}">Crear reserva</a></li>
+                        {% endif %}
+                        
+                        {% if request.session.token and request.session.usuario.rol == 2 %}
+                            <li><a class="dropdown-item" href="{% url 'reserva_crear_usuario' %}">Crear reserva usuario</a></li>
+                            <li><a class="dropdown-item" href="{% url 'listar_reservas_usuario' %}">Lista de reservas usuario</a></li>
+                        {% endif %}
                     </ul>
                 </li>
+                {% endif %}
+
 
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownDestinos" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Destinos
                     </a>
                     <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'destinos_lista_api' %}">Lista de destinos</a></li>
                         <li><a class="dropdown-item" href="{% url 'destino_busqueda_avanzada' %}">Buscar destinos Avanzado</a></li>
                     </ul>
                 </li>
+
 
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAlojamientos" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -76,14 +97,24 @@
                     </ul>
                 </li>
 
+
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownComentarios" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Comentarios
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{% url 'comentario_busqueda_avanzada' %}">Buscar comentarios Avanzado</a></li>
+                        {% if request.session.token and request.session.usuario.rol == 1 or request.session.usuario.rol == 3 %}
+                            <li><a class="dropdown-item" href="{% url 'comentarios_lista_api' %}">Lista de comentarios</a></li>
+                            <li><a class="dropdown-item" href="{% url 'comentario_busqueda_avanzada' %}">Buscar comentarios Avanzado</a></li>
+                        {% endif %}
+
+                        {% if request.session.token and request.session.usuario.rol == 2 %}
+                            <li><a class="dropdown-item" href="{% url 'comentario_crear_usuario' %}">Crear comentario usuario</a></li>
+                            <li><a class="dropdown-item" href="{% url 'listar_comentarios_usuario' %}">Lista de comentarios usuario</a></li>
+                        {% endif %}
                     </ul>
                 </li>
+
 
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownTransportes" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -91,9 +122,13 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{% url 'transportesMejorados_lista_api' %}">Lista de transportes Mejorados</a></li>
-                        <li><a class="dropdown-item" href="{% url 'transporte_crear' %}">Crear transporte</a></li>
+
+                        {% if request.session.token and request.session.usuario.rol == 1 or request.session.usuario.rol == 3 %}
+                            <li><a class="dropdown-item" href="{% url 'transporte_crear' %}">Crear transporte</a></li>
+                        {% endif %}
                     </ul>
                 </li>
+
 
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownExtras" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -101,7 +136,10 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{% url 'extrasMejorados_lista_api' %}">Lista de extras Mejorados</a></li>
-                        <li><a class="dropdown-item" href="{% url 'extra_crear' %}">Crear extra</a></li>
+
+                        {% if request.session.token and request.session.usuario.rol == 1 %}
+                            <li><a class="dropdown-item" href="{% url 'extra_crear' %}">Crear extra</a></li>
+                        {% endif %}
                     </ul>
                 </li>
 

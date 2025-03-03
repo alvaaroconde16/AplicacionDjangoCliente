@@ -1,0 +1,24 @@
+{% extends "principal.html" %}
+{% block contenido %}
+
+<h1 class="display-3">Lista de Destinos</h1>
+
+<div class="row">
+    {% for destino in destinos_mostrar %}
+        <div class="col-sm-4 mb-2">
+            <div class="card">
+                <div class="card-body">
+                    <h2>Nombre del Destino: {{ destino.nombre }}</h2>
+                    <p>Pais: {{ destino.pais }}</p>
+                    <p>Descripción: {{ destino.descripcion }}</p>
+                    <p><strong>Popularidad: {{ destino.popularidad }}</strong></p>
+                    <p><strong>Destino #{{ forloop.counter }}</strong></p>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <h1>Lo sentimos, pero no hay destinos disponibles.</h1>
+    {% endfor %}
+</div>
+
+{% endblock %}

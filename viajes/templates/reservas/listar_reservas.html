@@ -1,0 +1,51 @@
+{% extends "principal.html" %}
+{% block contenido %}
+
+<h1 class="display-3">Lista de Reservas</h1>
+
+<div class="row">
+    {% if reservas %}
+        {% for reserva in reservas %}
+            <div class="col-sm-4 mb-2">
+                <div class="card">
+                    <div class="card-body">
+                        <h2>Código de Reserva: {{ reserva.codigo_reserva }}</h2>
+                        <p>Fecha de Salida: {{ reserva.fecha_salida }}</p>
+                        <p>Fecha de Llegada: {{ reserva.fecha_llegada }}</p>
+                        <p>Número de Personas: {{ reserva.numero_personas }}</p>
+                        <p><strong>Reserva #{{ forloop.counter }}</strong></p>
+                        <p>Precio: {{ reserva.precio|floatformat:2 }}</p>
+
+                        <!-- Botón para actualizar -->
+                        {% if request.session.token and request.session.usuario.rol == 1 or request.session.usuario.rol == 3 %}
+                            <a href="{% url 'reserva_editar' reserva.id %}" class="btn btn-primary mb-1">Actualizar Reserva</a>
+                        {% endif %}
+
+                        <!-- Botón para actualizar nombre -->
+                        <a href="{% url 'reserva_actualizar_codigo' reserva.id %}" class="btn btn-warning mb-1">Actualizar Código</a>
+    
+                        <!-- Formulario para eliminar reserva -->
+                        {% if request.session.token and request.session.usuario.rol == 1 %}
+                            <form action="{% url 'reserva_eliminar' reserva.id %}" method="POST">
+                                {% csrf_token %}
+                                <button class="btn btn-danger" type="submit" onclick="return confirmarEliminacion();">
+                                    Eliminar
+                                </button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <h1>Lo sentimos pero no tienes reservas.</h1>
+    {% endif %}
+</div>
+
+<script type="text/javascript">
+    function confirmarEliminacion() {
+        return confirm("¿Estás seguro de que deseas eliminar esta reserva? Esta acción no se puede deshacer.");
+    }
+</script>
+
+{% endblock %}

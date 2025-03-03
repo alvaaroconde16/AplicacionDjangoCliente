@@ -19,18 +19,22 @@
             </div>
 
             <!-- Botón para actualizar -->
-            <a href="{% url 'transporte_editar' transporte.id %}" class="btn btn-primary mb-1">Actualizar Transporte</a>
+            {% if request.session.token and request.session.usuario.rol == 1 or request.session.usuario.rol == 3 %}
+              <a href="{% url 'transporte_editar' transporte.id %}" class="btn btn-primary mb-1">Actualizar Transporte</a>
 
-            <!-- Botón para actualizar nombre -->
-            <a href="{% url 'transporte_actualizar_capacidad' transporte.id %}" class="btn btn-warning mb-1">Actualizar Capacidad</a>
+              <!-- Botón para actualizar nombre -->
+              <a href="{% url 'transporte_actualizar_capacidad' transporte.id %}" class="btn btn-warning mb-1">Actualizar Capacidad</a>
+            {% endif %}
 
             <!-- Formulario para eliminar transporte -->
-            <form action="{% url 'transporte_eliminar' transporte.id %}" method="POST">
-                {% csrf_token %}
-                <button class="btn btn-danger" type="submit" onclick="return confirmarEliminacion();">
-                    Eliminar
-                </button>
-            </form>
+            {% if request.session.token and request.session.usuario.rol == 1 %}
+              <form action="{% url 'transporte_eliminar' transporte.id %}" method="POST">
+                  {% csrf_token %}
+                  <button class="btn btn-danger" type="submit" onclick="return confirmarEliminacion();">
+                      Eliminar
+                  </button>
+              </form>
+            {% endif %}
           </div>
         </div>
       </div>

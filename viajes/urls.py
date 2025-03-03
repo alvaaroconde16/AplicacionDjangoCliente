@@ -8,6 +8,8 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('reservas', views.reservas_lista_api, name='reservas_lista_api'),
     path('usuarios', views.usuarios_lista_api, name='usuarios_lista_api'),
+    path('comentarios', views.comentarios_lista_api, name='comentarios_lista_api'),
+    path('destinos', views.destinos_lista_api, name='destinos_lista_api'),
     path('reservasMejoradas', views.reservasMejoradas_lista_api, name='reservasMejoradas_lista_api'),
     path('alojamientosMejorados', views.alojamientosMejorados_lista_api, name='alojamientosMejorados_lista_api'),
     path('transportesMejorados', views.transportesMejorados_lista_api, name='transportesMejorados_lista_api'),
@@ -43,5 +45,10 @@ urlpatterns = [
     path('registrar',views.registrar_usuario,name='registrar_usuario'),
     path('accounts/login/',views.login,name='login'),
     path('accounts/logout/',views.logout,name='logout'),
+
+    path("reservas/crear_usuario", views.reserva_crear_usuario, name="reserva_crear_usuario"),
+    path("comentarios/crear_usuario", views.comentario_crear_usuario, name="comentario_crear_usuario"),
+    path('reservas/listar/', views.listar_reservas_usuario, name='listar_reservas_usuario'),
+    path('comentarios/listar/', views.listar_comentarios_usuario, name='listar_comentarios_usuario'),
 ]
 

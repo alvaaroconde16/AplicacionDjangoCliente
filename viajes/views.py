@@ -102,6 +102,20 @@ def extrasMejorados_lista_api(request):
     return render(request, 'extras/extraMejorado_api.html', {'extras_mostrar': extras})
 
 
+def comentarios_lista_api(request):
+    headers = {'Authorization': 'Bearer ' + env('OAUTH2_ACCESS_TOKEN_ADMIN')}
+    response = requests.get(API_BASE_URL + 'comentarios', headers=headers)
+    comentarios = response.json()
+    return render(request, 'comentarios/comentario_api.html', {'comentarios_mostrar': comentarios})
+
+
+def destinos_lista_api(request):
+    headers = {'Authorization': 'Bearer ' + env('OAUTH2_ACCESS_TOKEN_ADMIN')}
+    response = requests.get(API_BASE_URL + 'destinos', headers=headers)
+    destinos = response.json()
+    return render(request, 'destinos/destino_api.html', {'destinos_mostrar': destinos})
+
+
 #######################################################################################################################################################################
 
 
@@ -1109,6 +1123,187 @@ def login(request):
 def logout(request):
     del request.session['token']
     return redirect('index')
+
+
+#######################################################################################################################################################################
+
+
+def reserva_crear_usuario(request):
+    if request.method == "POST":
+        try:
+            formulario = ReservaUsuarioForm(request.POST)
+
+            # Obtener el token de la sesión del usuario
+            token_acceso = request.session.get("token")
+            if not token_acceso:
+                messages.error(request, "No tienes autorización para realizar esta acción.")
+                return redirect("login")  # Redirige al login si no hay token
+
+            headers = {
+                'Authorization': f'Bearer {token_acceso}',
+                "Content-Type": "application/json"
+            }
+
+            datos = formulario.data.copy()
+
+            # Convertir fechas al formato adecuado
+            datos["fecha_salida"] = str(datetime.strptime(datos["fecha_salida"], "%Y-%m-%d").date())
+            datos["fecha_llegada"] = str(datetime.strptime(datos["fecha_llegada"], "%Y-%m-%d").date())
+
+            # Hacer la petición a la API del servidor
+            response = requests.post(
+                'http://0.0.0.0:8000/api/v1/reservas/crear_usuario',
+                headers=headers,
+                data=json.dumps(datos)
+            )
+
+            if response.status_code == 201:  # Reserva creada correctamente
+                messages.success(request, "Reserva creada correctamente.")
+                return redirect("reservas_lista_api")
+            elif response.status_code == 400:
+                errores = response.json()
+                for error in errores:
+                    formulario.add_error(error, errores[error])
+                return render(request, 'reservas/create_usuario.html', {"formulario": formulario})
+            else:
+                messages.error(request, f"Error {response.status_code}: {response.text}")
+                return render(request, 'reservas/create_usuario.html', {"formulario": formulario})
+
+        except requests.exceptions.RequestException as err:
+            print(f'Error de conexión: {err}')
+            messages.error(request, "Error de conexión con el servidor.")
+            return render(request, 'reservas/create_usuario.html', {"formulario": formulario})
+
+    else:
+        formulario = ReservaUsuarioForm(None)
+
+    return render(request, 'reservas/create_usuario.html', {"formulario": formulario})
+
+
+def comentario_crear_usuario(request):
+    if request.method == "POST":
+        try:
+            # Obtener el formulario de comentario
+            formulario = ComentarioUsuarioForm(request.POST)
+
+            # Obtener el token de la sesión del usuario
+            token_acceso = request.session.get("token")
+            if not token_acceso:
+                messages.error(request, "No tienes autorización para realizar esta acción.")
+                return redirect("login")  # Redirige al login si no hay token
+
+            headers = {
+                'Authorization': f'Bearer {token_acceso}',
+                "Content-Type": "application/json"
+            }
+
+            # Recoger los datos del formulario
+            datos = formulario.data.copy()
+
+            # Si hay algún procesamiento adicional de datos (por ejemplo, fechas), hacerlo aquí
+            # En este caso, no necesitamos hacer nada con las fechas, ya que no son parte del comentario
+
+            # Hacer la petición a la API del servidor
+            response = requests.post(
+                'http://0.0.0.0:8000/api/v1/comentarios/crear_usuario',
+                headers=headers,
+                data=json.dumps(datos)
+            )
+
+            if response.status_code == 201:  # Comentario creado correctamente
+                messages.success(request, "Comentario creado correctamente.")
+                return redirect("comentarios_lista_api")  # Redirigir a la lista de comentarios o donde quieras
+            elif response.status_code == 400:
+                errores = response.json()
+                for error in errores:
+                    formulario.add_error(error, errores[error])
+                return render(request, 'comentarios/create_usuario.html', {"formulario": formulario})
+            else:
+                messages.error(request, f"Error {response.status_code}: {response.text}")
+                return render(request, 'comentarios/create_usuario.html', {"formulario": formulario})
+
+        except requests.exceptions.RequestException as err:
+            print(f'Error de conexión: {err}')
+            messages.error(request, "Error de conexión con el servidor.")
+            return render(request, 'comentarios/create_usuario.html', {"formulario": formulario})
+
+    else:
+        formulario = ComentarioUsuarioForm(None)  # Si es GET, mostrar formulario vacío
+
+    return render(request, 'comentarios/create_usuario.html', {"formulario": formulario})
+
+
+def listar_reservas_usuario(request):
+    
+    # Obtener el token de la sesión del usuario
+    token_acceso = request.session.get("token")
+    if not token_acceso:
+        messages.error(request, "No tienes autorización para realizar esta acción.")
+        return redirect("login")  # Redirige al login si no hay token
+
+    headers = {
+        'Authorization': f'Bearer {token_acceso}',
+        "Content-Type": "application/json"
+    }
+
+    try:
+        # Hacemos la solicitud GET a la API
+        response = requests.get(
+            'http://0.0.0.0:8000/api/v1/reservas/listar_usuario',  # La URL de tu endpoint de reservas
+            headers=headers
+        )
+
+        if response.status_code == 200:
+            reservas = response.json()  # Convertir la respuesta JSON en un diccionario Python
+        else:
+            reservas = []
+            messages.error(request, f"Error {response.status_code}: {response.text}")
+
+    except requests.exceptions.RequestException as err:
+        reservas = []
+        messages.error(request, f"Error de conexión: {err}")
+    
+    # Renderizar el template con los datos de las reservas
+    return render(request, 'reservas/listar_reservas.html', {'reservas': reservas})
+
+
+import requests
+from django.shortcuts import render, redirect
+from django.contrib import messages
+
+def listar_comentarios_usuario(request):
+    
+    # Obtener el token de la sesión del usuario
+    token_acceso = request.session.get("token")
+    if not token_acceso:
+        messages.error(request, "No tienes autorización para realizar esta acción.")
+        return redirect("login")  # Redirige al login si no hay token
+
+    headers = {
+        'Authorization': f'Bearer {token_acceso}',
+        "Content-Type": "application/json"
+    }
+
+    try:
+        # Hacemos la solicitud GET a la API para obtener los comentarios del usuario
+        response = requests.get(
+            'http://0.0.0.0:8000/api/v1/comentarios/listar_usuario',  # URL del endpoint para listar los comentarios del usuario
+            headers=headers
+        )
+
+        if response.status_code == 200:
+            comentarios = response.json()  # Convertir la respuesta JSON en un diccionario Python
+        else:
+            comentarios = []
+            messages.error(request, f"Error {response.status_code}: {response.text}")
+
+    except requests.exceptions.RequestException as err:
+        comentarios = []
+        messages.error(request, f"Error de conexión: {err}")
+    
+    # Renderizar el template con los datos de los comentarios
+    return render(request, 'comentarios/listar_comentarios.html', {'comentarios': comentarios})
+
 
 
 #######################################################################################################################################################################

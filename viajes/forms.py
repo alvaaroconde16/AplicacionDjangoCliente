@@ -313,3 +313,66 @@ class RegistroForm(UserCreationForm):
 class LoginForm(forms.Form):
     usuario = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput())
+
+
+#######################################################################################################################################################################
+
+
+class ReservaUsuarioForm(forms.Form):
+    codigo_reserva = forms.CharField(
+        label="Código de Reserva",
+        required=True,
+        max_length=20,
+        help_text="Máximo 20 caracteres"
+    )
+
+    fecha_salida = forms.DateField(
+        label="Fecha de Salida",
+        initial=datetime.today().date(),
+        widget=forms.DateInput(attrs={'type': 'date'})
+    )
+
+    fecha_llegada = forms.DateField(
+        label="Fecha de Llegada",
+        initial=datetime.today().date(),
+        widget=forms.DateInput(attrs={'type': 'date'})
+    )
+
+    numero_personas = forms.IntegerField(
+        label="Número de Personas",
+        min_value=1,
+        required=True
+    )
+
+    precio = forms.DecimalField(
+        label="Precio",
+        max_digits=10,
+        decimal_places=2,
+        required=True
+    )
+
+
+
+class ComentarioUsuarioForm(forms.Form):
+    titulo = forms.CharField(
+        label="Título del Comentario",
+        required=True,
+        max_length=100,
+        help_text="Máximo 100 caracteres"
+    )
+
+    contenido = forms.CharField(
+        label="Contenido del Comentario",
+        required=True,
+        widget=forms.Textarea(attrs={'rows': 4}),
+        help_text="Escribe tu comentario"
+    )
+
+    calificacion = forms.FloatField(
+        label="Calificación (0-5)",
+        min_value=0,
+        max_value=5,
+        required=True,
+        widget=forms.NumberInput(attrs={'step': '0.1'}),
+        help_text="Calificación entre 0 y 5"
+    )

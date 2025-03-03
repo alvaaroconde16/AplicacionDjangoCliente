@@ -1,0 +1,24 @@
+{% extends "principal.html" %}
+{% block contenido %}
+
+<h1 class="display-3">Lista de Comentarios</h1>
+
+<div class="row">
+    {% for comentario in comentarios %}
+        <div class="col-sm-4 mb-2">
+            <div class="card">
+                <div class="card-body">
+                    <h2>Título del Comentario: {{ comentario.titulo }}</h2>
+                    <p>Contenido: {{ comentario.contenido }}</p>
+                    <p>Calificación: {{ comentario.calificacion }}</p>
+                    <p><strong>Comentario #{{ forloop.counter }}</strong></p>
+                    <p>Fecha: {{ comentario.fecha_comentario }}</p>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <h1>Lo sentimos, pero no tienes comentarios disponibles.</h1>
+    {% endfor %}
+</div>
+
+{% endblock %}

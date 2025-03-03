@@ -19,19 +19,24 @@
                 <li>Código de Reserva: {{ reserva.codigo_reserva }} (Fecha de Salida: {{ reserva.fecha_salida }})</li>
               {% endfor %}
             </ul>
-            <!-- Botón para actualizar -->
-            <a href="{% url 'extra_editar' extra.id %}" class="btn btn-primary mb-1">Actualizar Extra</a>
 
-            <!-- Botón para actualizar nombre -->
-            <a href="{% url 'extra_actualizar_nombre' extra.id %}" class="btn btn-warning mb-1">Actualizar Nombre</a>
+            <!-- Botón para actualizar -->
+            {% if request.session.token and request.session.usuario.rol == 1 or request.session.usuario.rol == 3 %}
+              <a href="{% url 'extra_editar' extra.id %}" class="btn btn-primary mb-1">Actualizar Extra</a>
+
+              <!-- Botón para actualizar nombre -->
+              <a href="{% url 'extra_actualizar_nombre' extra.id %}" class="btn btn-warning mb-1">Actualizar Nombre</a>
+            {% endif %}
 
             <!-- Formulario para eliminar extra -->
-            <form action="{% url 'extra_eliminar' extra.id %}" method="POST">
-              {% csrf_token %}
-              <button class="btn btn-danger" type="submit" onclick="return confirmarEliminacion();">
-                  Eliminar
-              </button>
-            </form>
+            {% if request.session.token and request.session.usuario.rol == 1 %}
+              <form action="{% url 'extra_eliminar' extra.id %}" method="POST">
+                {% csrf_token %}
+                <button class="btn btn-danger" type="submit" onclick="return confirmarEliminacion();">
+                    Eliminar
+                </button>
+              </form>
+            {% endif %}
           </div>
         </div>
       </div>

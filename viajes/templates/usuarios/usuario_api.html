@@ -27,15 +27,18 @@
                     <a href="{% url 'usuario_editar' usuario.id %}" class="btn btn-primary mb-1">Actualizar Usuario</a>
 
                     <!-- Botón para actualizar nombre -->
+
                     <a href="{% url 'usuario_actualizar_nombre' usuario.id %}" class="btn btn-warning mb-1">Actualizar Nombre</a>
 
                     <!-- Formulario para eliminar usuario -->
-                    <form action="{% url 'usuario_eliminar' usuario.id %}" method="POST">
-                        {% csrf_token %}
-                        <button class="btn btn-danger" type="submit" onclick="return confirmarEliminacion();">
-                            Eliminar
-                        </button>
-                    </form>
+                    {% if request.session.token and request.session.usuario.rol == 1 %}
+                        <form action="{% url 'usuario_eliminar' usuario.id %}" method="POST">
+                            {% csrf_token %}
+                            <button class="btn btn-danger" type="submit" onclick="return confirmarEliminacion();">
+                                Eliminar
+                            </button>
+                        </form>
+                    {% endif %}
                 </div>
             </div>
         </div>
