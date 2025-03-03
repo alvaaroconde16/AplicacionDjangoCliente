@@ -1,6 +1,8 @@
 from django import forms
 from datetime import datetime, date
 from .helper import helper
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 
 class BusquedaReservaForm(forms.Form):
     textoBusqueda = forms.CharField(required=False, label="Buscar Reserva")
@@ -288,3 +290,26 @@ class ExtraActualizarNombreForm(forms.Form):
         max_length=100,
         help_text="Máximo 100 caracteres"
     )
+
+
+#######################################################################################################################################################################
+
+
+class RegistroForm(UserCreationForm): 
+    roles = (
+                (2, 'cliente'),
+                (3, 'proveedor'),
+            )   
+    rol = forms.ChoiceField(choices=roles)
+    nombre = forms.CharField()
+    correo = forms.EmailField()
+    edad = forms.IntegerField()
+    telefono = forms.CharField()  
+    class Meta:
+        model = User
+        fields = ('nombre', 'username', 'correo', 'edad', 'telefono', 'password1', 'password2', 'rol')
+        
+
+class LoginForm(forms.Form):
+    usuario = forms.CharField()
+    password = forms.CharField(widget=forms.PasswordInput())

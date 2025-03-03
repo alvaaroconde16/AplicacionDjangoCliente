@@ -95,3 +95,20 @@ class helper:
         extra = response.json()
         return extra
 
+
+    def obtener_token_session(usuario,password):
+        token_url = 'http://0.0.0.0:8000/oauth2/token/'
+        data = {
+            'grant_type': 'password',
+            'username': usuario,
+            'password': password,
+            'client_id': 'aplicacion_cliente',
+            'client_secret': 'alvaro',
+        }
+
+        response = requests.post(token_url, data=data)
+        respuesta = response.json()
+        if response.status_code == 200:
+            return respuesta.get('access_token')
+        else:
+            raise Exception(respuesta.get("error_description"))

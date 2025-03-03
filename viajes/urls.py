@@ -39,5 +39,9 @@ urlpatterns = [
     path('usuario/eliminar/<int:usuario_id>/', views.usuario_eliminar, name='usuario_eliminar'),
     path('transporte/eliminar/<int:transporte_id>/', views.transporte_eliminar, name='transporte_eliminar'),
     path('extra/eliminar/<int:extra_id>/', views.extra_eliminar, name='extra_eliminar'),
+
+    path('registrar',views.registrar_usuario,name='registrar_usuario'),
+    path('accounts/login/',views.login,name='login'),
+    path('accounts/logout/',views.logout,name='logout'),
 ]
 

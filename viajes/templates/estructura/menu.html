@@ -5,57 +5,50 @@
     <div class="container-fluid">
         <!-- Título de la barra de navegación -->
         <a class="navbar-brand" href="{% url 'index' %}">Gestor de Tareas</a>
-        
+
         <!-- Menú principal -->
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
 
                 <!-- Mostramos el rol del usuario -->
-                {% if request.user.is_authenticated %}
-                    <li class="nav-item text-white">
-                        Fecha inicio:
-                        <br>
-                        {{ request.session.fecha_inicio }}
-                    </li>
+                {% if request.session.token %}
 
                     <li class="nav-item text-white">
                         Rol: 
                         <br>
-                        {% if request.user.rol == 1 %}
-                        Administrador
-                        {% elif request.user.rol == 2 %}
-                        Cliente
-                        {% elif request.user.rol == 3 %}
-                        Proveedor
+                        {% if request.session.usuario.rol == 1 %}
+                            Administrador
+                        {% elif request.session.usuario.rol == 2 %}
+                            Cliente
+                        {% elif request.session.usuario.rol == 3 %}
+                            Proveedor
                         {% endif %}
                     </li>
 
                     <li class="nav-item text-white">
                         Usuario: 
                         <br>
-                        {{ request.user.username }}
+                        {{ request.session.usuario.username }}
                     </li>
                 {% endif %}
 
-                <!-- Menú de Usuarios con sublistas -->
+                <!-- Menús desplegables -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUsuarios" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Usuarios
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownUsuarios">
+                    <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{% url 'usuarios_lista_api' %}">Lista de usuarios</a></li>
                         <li><a class="dropdown-item" href="{% url 'usuario_busqueda_avanzada' %}">Buscar usuarios Avanzado</a></li>
                         <li><a class="dropdown-item" href="{% url 'usuario_crear' %}">Crear usuario</a></li>
                     </ul>
                 </li>
-                
 
-                <!-- Menú de Reservas con sublistas -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownReservas" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Reservas
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownReservas">
+                    <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{% url 'reservas_lista_api' %}">Lista de reservas</a></li>
                         <li><a class="dropdown-item" href="{% url 'reservasMejoradas_lista_api' %}">Lista de reservas Mejoradas</a></li>
                         <li><a class="dropdown-item" href="{% url 'reserva_busqueda_simple' %}">Buscar reservas</a></li>
@@ -64,59 +57,49 @@
                     </ul>
                 </li>
 
-
-                <!-- Menú de Destinos con sublistas -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUsuarios" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownDestinos" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Destinos
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownUsuarios">
+                    <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{% url 'destino_busqueda_avanzada' %}">Buscar destinos Avanzado</a></li>
                     </ul>
                 </li>
 
-
-                <!-- Menú de Alojamientos con sublistas -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUsuarios" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAlojamientos" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Alojamientos
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownUsuarios">
+                    <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{% url 'alojamientosMejorados_lista_api' %}">Lista de alojamientos Mejorados</a></li>
                         <li><a class="dropdown-item" href="{% url 'alojamiento_busqueda_avanzada' %}">Buscar alojamientos Avanzado</a></li>
                     </ul>
                 </li>
 
-
-                <!-- Menú de Destinos con sublistas -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUsuarios" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownComentarios" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Comentarios
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownUsuarios">
+                    <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{% url 'comentario_busqueda_avanzada' %}">Buscar comentarios Avanzado</a></li>
                     </ul>
                 </li>
 
-
-                <!-- Menú de Transporte con sublistas -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUsuarios" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownTransportes" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Transportes
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownUsuarios">
+                    <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{% url 'transportesMejorados_lista_api' %}">Lista de transportes Mejorados</a></li>
                         <li><a class="dropdown-item" href="{% url 'transporte_crear' %}">Crear transporte</a></li>
                     </ul>
                 </li>
 
-
-                <!-- Menú de Extras con sublistas -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUsuarios" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownExtras" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Extras
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownUsuarios">
+                    <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{% url 'extrasMejorados_lista_api' %}">Lista de extras Mejorados</a></li>
                         <li><a class="dropdown-item" href="{% url 'extra_crear' %}">Crear extra</a></li>
                     </ul>
@@ -124,5 +107,16 @@
 
             </ul>
         </div>
+
+        <!-- Botones de autenticación alineados a la derecha -->
+        <div class="d-flex ms-auto">
+            {% if request.session.token %}
+                <a href="{% url 'logout' %}" class="btn btn-danger me-2">Desconectarse</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-primary me-2">Login</a>
+                <a href="{% url 'registrar_usuario' %}" class="btn btn-success">Registrarse</a>
+            {% endif %}
+        </div>
+
     </div>
 </nav>
