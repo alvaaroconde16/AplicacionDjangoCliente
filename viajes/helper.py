@@ -97,7 +97,7 @@ class helper:
 
 
     def obtener_token_session(usuario,password):
-        token_url = 'http://0.0.0.0:8000/oauth2/token/'
+        token_url = 'http://alvaroconde.pythonanywhere.com/oauth2/token/'
         data = {
             'grant_type': 'password',
             'username': usuario,

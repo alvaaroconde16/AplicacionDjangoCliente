@@ -36,7 +36,7 @@ def crear_cabecera():
 
 # Definir una constante para la base de la URL de la API.
 # Esto permite cambiar la versión de la API en un solo lugar si es necesario en el futuro.
-API_BASE_URL = "http://0.0.0.0:8000/api/v1/"
+API_BASE_URL = "http://alvaroconde.pythonanywhere.com/api/v1/"
 
 # alvaroconde.pythonanywhere.com
 
@@ -1054,7 +1054,7 @@ def registrar_usuario(request):
                             "Content-Type": "application/json" 
                         }
                 response = requests.post(
-                    'http://0.0.0.0:8000/api/v1/registrar/usuario',
+                    'http://alvaroconde.pythonanywhere.com/api/v1/registrar/usuario',
                     headers=headers,
                     data=json.dumps(formulario.cleaned_data)
                 )
@@ -1103,7 +1103,7 @@ def login(request):
             
           
             headers = {'Authorization': 'Bearer '+token_acceso} 
-            response = requests.get('http://0.0.0.0:8000/api/v1/usuario/token/'+token_acceso,headers=headers)
+            response = requests.get('http://alvaroconde.pythonanywhere.com/api/v1/usuario/token/'+token_acceso,headers=headers)
             usuario = response.json()
             request.session["usuario"] = usuario
             
@@ -1152,7 +1152,7 @@ def reserva_crear_usuario(request):
 
             # Hacer la petición a la API del servidor
             response = requests.post(
-                'http://0.0.0.0:8000/api/v1/reservas/crear_usuario',
+                'http://alvaroconde.pythonanywhere.com/api/v1/reservas/crear_usuario',
                 headers=headers,
                 data=json.dumps(datos)
             )
@@ -1205,7 +1205,7 @@ def comentario_crear_usuario(request):
 
             # Hacer la petición a la API del servidor
             response = requests.post(
-                'http://0.0.0.0:8000/api/v1/comentarios/crear_usuario',
+                'http://alvaroconde.pythonanywhere.com/api/v1/comentarios/crear_usuario',
                 headers=headers,
                 data=json.dumps(datos)
             )
@@ -1249,7 +1249,7 @@ def listar_reservas_usuario(request):
     try:
         # Hacemos la solicitud GET a la API
         response = requests.get(
-            'http://0.0.0.0:8000/api/v1/reservas/listar_usuario',  # La URL de tu endpoint de reservas
+            'http://alvaroconde.pythonanywhere.com/api/v1/reservas/listar_usuario',  # La URL de tu endpoint de reservas
             headers=headers
         )
 
@@ -1287,7 +1287,7 @@ def listar_comentarios_usuario(request):
     try:
         # Hacemos la solicitud GET a la API para obtener los comentarios del usuario
         response = requests.get(
-            'http://0.0.0.0:8000/api/v1/comentarios/listar_usuario',  # URL del endpoint para listar los comentarios del usuario
+            'http://alvaroconde.pythonanywhere.com/api/v1/comentarios/listar_usuario',  # URL del endpoint para listar los comentarios del usuario
             headers=headers
         )
 

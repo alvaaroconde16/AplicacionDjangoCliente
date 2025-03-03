@@ -103,10 +103,8 @@
                         Comentarios
                     </a>
                     <ul class="dropdown-menu">
-                        {% if request.session.token and request.session.usuario.rol == 1 or request.session.usuario.rol == 3 %}
-                            <li><a class="dropdown-item" href="{% url 'comentarios_lista_api' %}">Lista de comentarios</a></li>
-                            <li><a class="dropdown-item" href="{% url 'comentario_busqueda_avanzada' %}">Buscar comentarios Avanzado</a></li>
-                        {% endif %}
+                        <li><a class="dropdown-item" href="{% url 'comentarios_lista_api' %}">Lista de comentarios</a></li>
+                        <li><a class="dropdown-item" href="{% url 'comentario_busqueda_avanzada' %}">Buscar comentarios Avanzado</a></li>
 
                         {% if request.session.token and request.session.usuario.rol == 2 %}
                             <li><a class="dropdown-item" href="{% url 'comentario_crear_usuario' %}">Crear comentario usuario</a></li>

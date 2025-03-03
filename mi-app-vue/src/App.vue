@@ -96,7 +96,7 @@ export default {
     fetchData(endpoint, target) {
       const token = '1xxfXixpxqxAiiYPpHYtGt1FRGsZ0L';
 
-      axios.get(`http://0.0.0.0:8000/api/v1/${endpoint}`, {
+      axios.get(`http://alvaroconde.pythonanywhere.com/api/v1/${endpoint}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
       .then(response => {
