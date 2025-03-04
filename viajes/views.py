@@ -771,6 +771,10 @@ def reserva_actualizar_codigo(request, reserva_id):
     datosFormulario = None
     reserva = helper.obtener_reserva(reserva_id)  # Obtenemos los datos de la reserva
 
+    usuario = request.session.get("usuario", {})  # Obtiene el usuario, o un diccionario vacío si no existe
+    rol_usuario = usuario.get("rol")  # Extrae el rol
+    print(request.session.items())  # Ver todos los valores almacenados en la sesión
+
     formulario = ReservaActualizarCodigoForm(datosFormulario,
             initial={
                 'codigo_reserva': reserva['codigo_reserva'],
@@ -790,7 +794,10 @@ def reserva_actualizar_codigo(request, reserva_id):
 
             if response.status_code == requests.codes.ok:
                 messages.success(request, "Codigo de reserva actualizado correctamente.")
-                return redirect("reservas_lista_api")  # Redirige a la vista de mostrar la reserva
+                if rol_usuario == 2:
+                    return redirect("listar_reservas_usuario")  # Redirige a la vista de mostrar la reserva
+                else:
+                    return redirect("reservas_lista_api")
             else:
                 print(response.status_code)
                 response.raise_for_status()
@@ -1159,7 +1166,7 @@ def reserva_crear_usuario(request):
 
             if response.status_code == 201:  # Reserva creada correctamente
                 messages.success(request, "Reserva creada correctamente.")
-                return redirect("reservas_lista_api")
+                return redirect("listar_reservas_usuario")
             elif response.status_code == 400:
                 errores = response.json()
                 for error in errores:
